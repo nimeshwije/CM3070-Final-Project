@@ -89,12 +89,21 @@ def fetch_prices(
       1. yfinance download (auto-adjusted closes), which also refreshes the cache;
       2. the local CSV cache;
       3. a synthetic GBM series (if `allow_synthetic`), so the pipeline always runs.
+
+    NOTE: when no `start` is given, the FULL available history is requested.
+    yfinance's own default with no dates is period="1mo" (~22 trading days),
+    which is far too little for the rule's long moving-average window -- this
+    is exactly the "Need at least N days of prices, got 22" failure mode.
     """
     # --- 1. live download -------------------------------------------------
     try:
         import yfinance as yf
 
-        df = yf.download(ticker, start=start, end=end, progress=False, auto_adjust=True)
+        if start is None and end is None:
+            # No range requested -> full history, never yfinance's 1-month default.
+            df = yf.download(ticker, period="max", progress=False, auto_adjust=True)
+        else:
+            df = yf.download(ticker, start=start, end=end, progress=False, auto_adjust=True)
         if df is not None and len(df) > 0:
             close = df["Close"]
             if isinstance(close, pd.DataFrame):  # yfinance MultiIndex quirk
