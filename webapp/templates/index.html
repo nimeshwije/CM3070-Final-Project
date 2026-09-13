@@ -1,51 +1,5 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="utf-8">
-<title>Evolutionary Financial Advisor</title>
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<style>
-  :root { --ink:#1a2233; --muted:#5b6579; --line:#e3e7ef; --accent:#2456d6;
-          --buy:#0d7a4f; --sell:#b3261e; --hold:#8a6d00; --bg:#f6f7fa; }
-  * { box-sizing: border-box; }
-  body { margin:0; font-family:'Segoe UI',system-ui,-apple-system,sans-serif;
-         background:var(--bg); color:var(--ink); }
-  .wrap { max-width: 900px; margin: 0 auto; padding: 24px 16px 48px; }
-  header h1 { font-size:1.5rem; margin:0 0 4px; }
-  header p  { color:var(--muted); margin:0 0 20px; }
-  .card { background:#fff; border:1px solid var(--line); border-radius:10px;
-          padding:18px 20px; margin-bottom:16px; }
-  form.controls { display:flex; gap:12px; align-items:center; flex-wrap:wrap; }
-  select,button { font-size:1rem; padding:8px 12px; border-radius:8px; border:1px solid var(--line); }
-  button { background:var(--accent); color:#fff; border:none; cursor:pointer; }
-  .badge { display:inline-block; font-weight:700; font-size:1.6rem; letter-spacing:.03em;
-           padding:6px 18px; border-radius:8px; color:#fff; }
-  .badge.BUY  { background:var(--buy); }
-  .badge.SELL { background:var(--sell); }
-  .badge.HOLD { background:var(--hold); }
-  .meta { color:var(--muted); font-size:.9rem; margin-top:6px; }
-  ul.reasons { margin:10px 0 0; padding-left:20px; }
-  ul.reasons li { margin:4px 0; }
-  .explain { font-size:1.05rem; line-height:1.55; }
-  .source-tag { font-size:.78rem; color:var(--muted); text-transform:uppercase; letter-spacing:.06em; }
-  table.kv { border-collapse:collapse; width:100%; font-size:.92rem; }
-  table.kv td { border-bottom:1px solid var(--line); padding:6px 8px; }
-  table.kv td:first-child { color:var(--muted); width:55%; }
-  img.chart { width:100%; border:1px solid var(--line); border-radius:8px; }
-  .disclaimer { background:#fff8e6; border:1px solid #f0dfa8; color:#6b5a12;
-                border-radius:8px; padding:12px 16px; font-size:.9rem; }
-  .error { background:#fdecea; border:1px solid #f5c6c2; color:#8a1c14;
-           border-radius:8px; padding:12px 16px; }
-  code { background:#eef1f6; padding:2px 5px; border-radius:4px; }
-</style>
-</head>
-<body>
-<div class="wrap">
-  <header>
-    <h1>Evolutionary Financial Advisor</h1>
-    <p>A transparent, risk-aware advisor using a trading rule evolved by a genetic algorithm.</p>
-  </header>
-
+{% extends "base.html" %}
+{% block content %}
   {% if error %}
     <div class="error"><strong>Problem:</strong> {{ error }}</div>
   {% endif %}
@@ -61,7 +15,7 @@
       </select>
       <label><input type="checkbox" name="llm" value="on" {% if use_llm %}checked{% endif %}
              onchange="this.form.submit()"> Use local LLM explanation</label>
-      <button type="submit">Get advice</button>
+      <button type="submit" class="primary">Get advice</button>
     </form>
   </div>
   {% endif %}
@@ -111,8 +65,4 @@
   </div>
   {% endif %}
   {% endif %}
-
-  <div class="disclaimer">{{ disclaimer }}</div>
-</div>
-</body>
-</html>
+{% endblock %}

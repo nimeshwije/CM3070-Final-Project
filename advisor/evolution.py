@@ -79,6 +79,7 @@ def evolve(
     `price_map` maps ticker -> training-window price series (one entry for
     single-asset evolution, several for multi-asset).  Returns the best
     genome, its fitness, and a per-generation history for convergence plots.
+    `progress_callback(gen, best, mean)` is invoked once per generation.
     """
     ga_cfg = ga_cfg or GAConfig()
     fit_cfg = fit_cfg or FitnessConfig()

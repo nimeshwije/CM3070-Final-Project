@@ -8,11 +8,13 @@ See **SETUP.md** for installation and usage instructions.
 
 ## Architecture
 
-The system separates into an **offline training pipeline** (which the end
-user never touches) and an **online advisor** (which they interact with):
+The system separates into a **training system** (administrator only) and
+an **online advisor** (any user), both served by one Flask process:
 
 ```
-OFFLINE  ─ scripts/train.py
+TRAINING SYSTEM  ─ webapp/admin.py (browser, login-protected)  or  scripts/train.py (CLI)
+  advisor/pipeline.py    the single end-to-end training pipeline both entry points call
+  advisor/jobs.py        background job + live progress for the web admin
   advisor/data.py        price ingestion (yfinance + cache + GBM fallback)
   advisor/genome.py      the 5-gene strategy representation
   advisor/indicators.py  SMA, RSI
@@ -22,7 +24,7 @@ OFFLINE  ─ scripts/train.py
   advisor/evaluation.py  train/test split + walk-forward evaluation
   advisor/persistence.py rule artifacts -> models/<ticker>.json
 
-ONLINE   ─ webapp/app.py (Flask)
+ONLINE ADVISOR   ─ webapp/app.py (public)
   advisor/rule_engine.py deterministic BUY/HOLD/SELL + machine-readable reasons
   advisor/explain.py     guardrailed local-LLM explanation (Ollama) + fallback
 ```
@@ -32,6 +34,21 @@ lightweight: it loads the rule, fetches recent prices, and emits a signal.
 The language model **never makes or alters the decision** — it only rewords
 the rule engine's output, and every LLM response is post-checked against the
 decision before being shown (falling back to a deterministic template).
+
+## Admin training area
+
+`/admin` lets an administrator evolve rules from the browser, review every
+saved rule's out-of-sample record against buy-and-hold, and delete rules.
+Design notes:
+
+- One admin account; password from `ADVISOR_ADMIN_PASSWORD`, stored only as
+  a salted PBKDF2 hash; session cookie is HttpOnly + SameSite.
+- Brute-force throttle (5 failures → 5-minute lockout), CSRF tokens on all
+  state-changing forms, strict ticker validation before any file access.
+- Training runs in a background thread; the page polls for progress. One job
+  at a time — the GA is CPU-bound, so parallel jobs would only slow each other.
+- The browser and the CLI call the same `train_rule()`; same settings and
+  seed give the same rule, so results are reproducible either way.
 
 ## Honesty measures baked into the evaluation
 

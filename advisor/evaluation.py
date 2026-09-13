@@ -12,7 +12,7 @@ from dataclasses import dataclass
 
 import pandas as pd
 
-from .backtest import BacktestResult, run_backtest
+from .backtest import DEFAULT_COST, TRADING_DAYS, BacktestResult, run_backtest
 from .genome import Genome
 
 
@@ -56,8 +56,6 @@ def evaluate_split(
     cost: float | None = None,
 ) -> SplitEvaluation:
     """Backtest `genome` separately on the train and held-out test windows."""
-    from .backtest import DEFAULT_COST
-
     cost = DEFAULT_COST if cost is None else cost
     train, test = chronological_split(prices, train_frac)
     train_res = run_backtest(train, genome, cost)
@@ -81,8 +79,6 @@ def walk_forward_report(
     Used in the final report to show how performance varies by regime
     (cf. Potvin et al. 2004 on regime-dependence).
     """
-    from .backtest import DEFAULT_COST, TRADING_DAYS
-
     cost = DEFAULT_COST if cost is None else cost
     w = int(window_years * TRADING_DAYS)
     rows = []

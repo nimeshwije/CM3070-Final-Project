@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
-"""Train (evolve) a trading rule for one or more tickers.
+"""Train (evolve) a trading rule for one or more tickers from the terminal.
 
-This is the OFFLINE pipeline: data ingestion -> evolutionary engine ->
-evaluation -> saved rule artifact.  The end user never runs this; the web
-advisor only loads the resulting models/<ticker>.json.
+This is a thin command-line wrapper over `advisor.pipeline.train_rule` --
+the same pipeline the web admin area runs -- so both entry points produce
+identical artifacts for identical settings and seed.
 
 Examples
 --------
@@ -24,13 +24,11 @@ import logging
 import os
 import sys
 
+import pandas as pd
+
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from advisor.data import fetch_prices, synthetic_gbm, PriceSeries
-from advisor.evaluation import chronological_split, evaluate_split
-from advisor.evolution import GAConfig, evolve
-from advisor.fitness import FitnessConfig
-from advisor.persistence import save_artifact
+from advisor.pipeline import TrainRequest, train_rule
 
 
 def main() -> int:
@@ -52,57 +50,30 @@ def main() -> int:
 
     logging.basicConfig(level=logging.INFO, format="%(levelname)s %(message)s")
 
-    # ---------------------------------------------------------- data
-    series: dict[str, PriceSeries] = {}
-    for t in args.ticker:
-        if args.synthetic:
-            series[t] = PriceSeries(t, synthetic_gbm(seed=abs(hash(t)) % 10_000), "synthetic")
-        else:
-            series[t] = fetch_prices(t, start=args.start, end=args.end)
-        print(f"{t}: {len(series[t])} days ({series[t].source})")
+    req = TrainRequest(
+        tickers=[t.upper() for t in args.ticker],
+        start=args.start, end=args.end, train_frac=args.train_frac,
+        population=args.population, generations=args.generations, seed=args.seed,
+        cost=args.cost, folds=args.folds, synthetic=args.synthetic,
+    )
+    outcome = train_rule(req, progress=lambda msg: print("  " + msg))
 
-    train_map, test_map = {}, {}
-    for t, ps in series.items():
-        tr, te = chronological_split(ps.prices, args.train_frac)
-        train_map[t], test_map[t] = tr, te
-
-    # ---------------------------------------------------------- evolve
-    ga_cfg = GAConfig(population_size=args.population, generations=args.generations, seed=args.seed)
-    fit_cfg = FitnessConfig(n_folds=args.folds, cost=args.cost)
-
-    def progress(gen, best, mean):
-        print(f"  gen {gen:3d}  best fitness {best:+.3f}  mean {mean:+.3f}")
-
-    print(f"\nEvolving on {list(train_map)} "
-          f"(pop {ga_cfg.population_size}, {ga_cfg.generations} generations)...")
-    result = evolve(train_map, ga_cfg, fit_cfg, progress_callback=progress)
-    genome = result.best_genome
-    print(f"\nBest genome: {genome.to_dict()}")
-    print(f"Rule: {genome.describe()}\n")
-
-    # ---------------------------------------------------------- evaluate & save
-    for t, ps in series.items():
-        ev = evaluate_split(ps.prices, genome, args.train_frac, cost=args.cost)
-        print(f"=== {t} ===")
-        print(ev.summary_table().round(3).to_string())
-        print(f"Train window: {ev.train_range[0]} .. {ev.train_range[1]}")
-        print(f"Test window:  {ev.test_range[0]} .. {ev.test_range[1]}\n")
-        path = save_artifact(
-            t,
-            genome,
-            train_metrics=ev.train_result.metrics,
-            test_metrics=ev.test_result.metrics,
-            meta={
-                "data_source": ps.source,
-                "train_range": ev.train_range,
-                "test_range": ev.test_range,
-                "ga": vars(ga_cfg),
-                "fitness": vars(fit_cfg),
-                "history": result.history,
-                "multi_asset_partners": [x for x in series if x != t],
-            },
-        )
-        print(f"Saved rule artifact -> {path}\n")
+    print(f"\nBest genome: {outcome.genome}")
+    print(f"Rule: {outcome.rule_text}\n")
+    for row in outcome.per_ticker:
+        tr, te = row["train"], row["test"]
+        table = pd.DataFrame({
+            "In-sample": [tr["total_return"], tr["sharpe"], tr["max_drawdown"], tr["n_trades"]],
+            "Out-of-sample": [te["total_return"], te["sharpe"], te["max_drawdown"], te["n_trades"]],
+            "Buy & hold (OOS)": [te["benchmark_total_return"], te["benchmark_sharpe"],
+                                 te["benchmark_max_drawdown"], None],
+        }, index=["Total return", "Sharpe ratio", "Max drawdown", "Number of trades"])
+        print(f"=== {row['ticker']} ({row['data_source']}) ===")
+        print(table.round(3).to_string())
+        print(f"Train window: {row['train_range'][0]} .. {row['train_range'][1]}")
+        print(f"Test window:  {row['test_range'][0]} .. {row['test_range'][1]}\n")
+    for p in outcome.artifacts:
+        print(f"Saved rule artifact -> {p}")
     return 0
 
 

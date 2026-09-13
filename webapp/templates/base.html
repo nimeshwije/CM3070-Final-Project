@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>{% block title %}Evolutionary Financial Advisor{% endblock %}</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+  :root { --ink:#1a2233; --muted:#5b6579; --line:#e3e7ef; --accent:#2456d6;
+          --buy:#0d7a4f; --sell:#b3261e; --hold:#8a6d00; --bg:#f6f7fa; }
+  * { box-sizing: border-box; }
+  body { margin:0; font-family:'Segoe UI',system-ui,-apple-system,sans-serif;
+         background:var(--bg); color:var(--ink); }
+  .wrap { max-width: 980px; margin: 0 auto; padding: 24px 16px 48px; }
+  header { display:flex; justify-content:space-between; align-items:flex-start; gap:16px; flex-wrap:wrap; }
+  header h1 { font-size:1.5rem; margin:0 0 4px; }
+  header p  { color:var(--muted); margin:0 0 20px; }
+  nav a, nav button { font-size:.9rem; color:var(--accent); text-decoration:none; margin-left:14px;
+                      background:none; border:none; cursor:pointer; padding:0; font-family:inherit; }
+  nav a:hover, nav button:hover { text-decoration:underline; }
+  .card { background:#fff; border:1px solid var(--line); border-radius:10px;
+          padding:18px 20px; margin-bottom:16px; }
+  form.controls { display:flex; gap:12px; align-items:center; flex-wrap:wrap; }
+  input, select, button { font-size:1rem; padding:8px 12px; border-radius:8px; border:1px solid var(--line);
+                          font-family:inherit; }
+  button.primary { background:var(--accent); color:#fff; border:none; cursor:pointer; }
+  button.danger  { background:#fff; color:var(--sell); border:1px solid var(--sell); cursor:pointer;
+                   font-size:.85rem; padding:4px 10px; }
+  button:disabled { opacity:.5; cursor:not-allowed; }
+  .badge { display:inline-block; font-weight:700; font-size:1.6rem; letter-spacing:.03em;
+           padding:6px 18px; border-radius:8px; color:#fff; }
+  .badge.BUY  { background:var(--buy); }
+  .badge.SELL { background:var(--sell); }
+  .badge.HOLD { background:var(--hold); }
+  .meta { color:var(--muted); font-size:.9rem; margin-top:6px; }
+  ul.reasons { margin:10px 0 0; padding-left:20px; }
+  ul.reasons li { margin:4px 0; }
+  .explain { font-size:1.05rem; line-height:1.55; white-space:pre-line; }
+  .source-tag { font-size:.78rem; color:var(--muted); text-transform:uppercase; letter-spacing:.06em; }
+  table.kv { border-collapse:collapse; width:100%; font-size:.92rem; }
+  table.kv td { border-bottom:1px solid var(--line); padding:6px 8px; }
+  table.kv td:first-child { color:var(--muted); width:55%; }
+  table.grid { border-collapse:collapse; width:100%; font-size:.88rem; }
+  table.grid th, table.grid td { border-bottom:1px solid var(--line); padding:7px 8px; text-align:left;
+                                 vertical-align:top; }
+  table.grid th { color:var(--muted); font-weight:600; font-size:.8rem; text-transform:uppercase; letter-spacing:.04em; }
+  .scroll { overflow-x:auto; }
+  img.chart { width:100%; border:1px solid var(--line); border-radius:8px; }
+  .disclaimer { background:#fff8e6; border:1px solid #f0dfa8; color:#6b5a12;
+                border-radius:8px; padding:12px 16px; font-size:.9rem; }
+  .error { background:#fdecea; border:1px solid #f5c6c2; color:#8a1c14;
+           border-radius:8px; padding:12px 16px; margin-bottom:16px; }
+  .ok    { background:#e8f6ee; border:1px solid #b9e2c9; color:#155a35;
+           border-radius:8px; padding:12px 16px; margin-bottom:16px; }
+  .warn  { background:#fff8e6; border:1px solid #f0dfa8; color:#6b5a12;
+           border-radius:8px; padding:12px 16px; margin-bottom:16px; }
+  code, .mono { font-family:ui-monospace,SFMono-Regular,Menlo,monospace; font-size:.88em; }
+  code { background:#eef1f6; padding:2px 5px; border-radius:4px; }
+  .grid2 { display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:12px; }
+  .grid2 label { display:flex; flex-direction:column; gap:4px; font-size:.85rem; color:var(--muted); }
+  .grid2 input { width:100%; }
+  .progress { height:10px; background:#eef1f6; border-radius:5px; overflow:hidden; margin:10px 0; }
+  .progress > div { height:100%; background:var(--accent); width:0; transition:width .4s; }
+  pre.log { background:#0f172a; color:#d7e0f0; padding:12px 14px; border-radius:8px; max-height:320px;
+            overflow:auto; font-size:.8rem; line-height:1.45; margin:0; white-space:pre-wrap; }
+  .pill { display:inline-block; padding:2px 10px; border-radius:999px; font-size:.78rem; font-weight:600; }
+  .pill.running { background:#e6eeff; color:var(--accent); }
+  .pill.done    { background:#e8f6ee; color:var(--buy); }
+  .pill.failed  { background:#fdecea; color:var(--sell); }
+  .pill.queued  { background:#eef1f6; color:var(--muted); }
+  .pos { color:var(--buy); } .neg { color:var(--sell); }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div>
+      <h1>{% block heading %}Evolutionary Financial Advisor{% endblock %}</h1>
+      <p>{% block subheading %}A transparent, risk-aware advisor using a trading rule evolved by a genetic algorithm.{% endblock %}</p>
+    </div>
+    <nav>
+      <a href="{{ url_for('index') }}">Advisor</a>
+      {% if session.get('admin') %}
+        <a href="{{ url_for('admin.dashboard') }}">Admin</a>
+        <form method="post" action="{{ url_for('admin.logout') }}" style="display:inline">
+          <input type="hidden" name="csrf" value="{{ session.get('csrf', '') }}">
+          <button type="submit">Log out</button>
+        </form>
+      {% else %}
+        <a href="{{ url_for('admin.login') }}">Admin login</a>
+      {% endif %}
+    </nav>
+  </header>
+
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% for category, msg in messages %}
+      <div class="{{ 'error' if category == 'error' else 'ok' }}">{{ msg }}</div>
+    {% endfor %}
+  {% endwith %}
+
+  {% block content %}{% endblock %}
+
+  <div class="disclaimer">{{ disclaimer }}</div>
+</div>
+{% block scripts %}{% endblock %}
+</body>
+</html>

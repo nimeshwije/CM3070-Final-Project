@@ -1,0 +1,177 @@
+{% extends "base.html" %}
+{% block title %}Admin — Evolutionary Financial Advisor{% endblock %}
+{% block heading %}Training system (admin){% endblock %}
+{% block subheading %}Evolve new rules, review every saved rule's out-of-sample record, and retire rules. Training here runs the same pipeline as <code>scripts/train.py</code>.{% endblock %}
+{% block content %}
+
+  {% if using_default_password %}
+    <div class="warn"><strong>Development mode:</strong> the default admin password is active.
+      Set <code>ADVISOR_ADMIN_PASSWORD</code> before exposing this app.</div>
+  {% endif %}
+
+  <!-- ============================================================ training job -->
+  <div class="card" id="job-card" {% if not job %}hidden{% endif %}>
+    <div class="source-tag">Training job
+      <span id="job-status" class="pill {{ job.status if job else 'queued' }}">{{ job.status if job else '' }}</span>
+      <span id="job-elapsed" class="meta" style="display:inline"></span>
+    </div>
+    <div class="meta" id="job-request">
+      {% if job %}{{ job.request.tickers|join(', ') }} · pop {{ job.request.population }} · {{ job.request.generations }} gens
+      · seed {{ job.request.seed }} · cost {{ job.request.cost }} · folds {{ job.request.folds }}{% if job.request.synthetic %} · synthetic data{% endif %}{% endif %}
+    </div>
+    <div class="progress"><div id="job-bar" style="width: {{ job.progress_pct if job else 0 }}%"></div></div>
+    <pre class="log" id="job-log">{% if job %}{{ job.log|join('\n') }}{% endif %}</pre>
+    <div id="job-error" class="error" style="margin-top:12px" {% if not (job and job.error) %}hidden{% endif %}>
+      {{ job.error if job else '' }}</div>
+    <div id="job-result" style="margin-top:12px" {% if not (job and job.result) %}hidden{% endif %}>
+      {% if job and job.result %}
+        <strong>Evolved rule:</strong> {{ job.result.rule_text }}
+      {% endif %}
+    </div>
+  </div>
+
+  <!-- ============================================================ train form -->
+  <div class="card">
+    <div class="source-tag">Evolve a new rule</div>
+    <form method="post" action="{{ url_for('admin.train') }}" id="train-form">
+      <input type="hidden" name="csrf" value="{{ csrf_token() }}">
+      <div class="grid2" style="margin-top:10px">
+        <label style="grid-column: 1 / -1">Ticker(s) — one for single-asset, several (space or comma separated) for multi-asset evolution
+          <input name="tickers" placeholder="AAPL  or  AAPL MSFT SPY" required
+                 pattern="[A-Za-z0-9.\-^= ,]+" title="Ticker symbols only">
+        </label>
+        <label>Start date <input type="date" name="start" value="{{ defaults.start }}"></label>
+        <label>End date (blank = today) <input type="date" name="end"></label>
+        <label>Training fraction <input type="number" name="train_frac" step="0.05" min="0.1" max="0.95" value="{{ defaults.train_frac }}"></label>
+        <label>Population <input type="number" name="population" min="4" max="500" value="{{ defaults.population }}"></label>
+        <label>Generations <input type="number" name="generations" min="1" max="500" value="{{ defaults.generations }}"></label>
+        <label>Seed <input type="number" name="seed" value="{{ defaults.seed }}"></label>
+        <label>Transaction cost / side <input type="number" name="cost" step="0.0005" min="0" max="0.05" value="{{ defaults.cost }}"></label>
+        <label>Walk-forward folds <input type="number" name="folds" min="1" max="12" value="{{ defaults.folds }}"></label>
+      </div>
+      <div class="controls" style="margin-top:14px">
+        <label><input type="checkbox" name="synthetic"> Use synthetic data (offline demo)</label>
+        <button type="submit" class="primary" id="train-btn" {% if busy %}disabled{% endif %}>
+          {% if busy %}Training in progress…{% else %}Start training{% endif %}
+        </button>
+      </div>
+    </form>
+    <p class="meta">A 60 × 40 run on ten years of daily data typically takes a few minutes. The evolved rule is
+      evaluated on the held-out window it never saw, then saved and made available on the advisor page.</p>
+  </div>
+
+  <!-- ============================================================ models -->
+  <div class="card">
+    <div class="source-tag">Saved rules ({{ models|length }})</div>
+    {% if not models %}
+      <p class="meta">No rules yet — train one above.</p>
+    {% else %}
+    <div class="scroll">
+    <table class="grid">
+      <thead><tr>
+        <th>Ticker</th><th>Genome (short / long / RSI n / buy / sell)</th>
+        <th>OOS Sharpe<br><span style="font-weight:400">vs buy&amp;hold</span></th>
+        <th>OOS return<br><span style="font-weight:400">vs buy&amp;hold</span></th>
+        <th>Max DD<br><span style="font-weight:400">vs buy&amp;hold</span></th>
+        <th>Trades</th><th>Data</th><th>Trained</th><th></th>
+      </tr></thead>
+      <tbody>
+      {% for m in models %}
+        <tr>
+          <td><strong>{{ m.ticker }}</strong>{% if m.partners %}<div class="meta">multi-asset with {{ m.partners|join(', ') }}</div>{% endif %}</td>
+          {% if m.error %}
+            <td colspan="7" class="neg">Corrupt artifact: {{ m.error }}</td>
+          {% else %}
+            <td class="mono">{{ m.genome.short_window }} / {{ m.genome.long_window }} / {{ m.genome.rsi_period }} / {{ m.genome.rsi_buy }} / {{ m.genome.rsi_sell }}</td>
+            <td><span class="{{ 'pos' if m.oos_sharpe >= m.bench_sharpe else 'neg' }}">{{ "%.2f"|format(m.oos_sharpe) }}</span>
+                <span class="meta">vs {{ "%.2f"|format(m.bench_sharpe) }}</span></td>
+            <td><span class="{{ 'pos' if m.oos_return >= m.bench_return else 'neg' }}">{{ "%+.1f%%"|format(m.oos_return*100) }}</span>
+                <span class="meta">vs {{ "%+.1f%%"|format(m.bench_return*100) }}</span></td>
+            <td><span class="{{ 'pos' if m.max_dd >= m.bench_max_dd else 'neg' }}">{{ "%.1f%%"|format(m.max_dd*100) }}</span>
+                <span class="meta">vs {{ "%.1f%%"|format(m.bench_max_dd*100) }}</span></td>
+            <td>{{ m.n_trades }}</td>
+            <td>{{ m.data_source }}{% if m.test_range %}<div class="meta">OOS {{ m.test_range[0] }} → {{ m.test_range[1] }}</div>{% endif %}</td>
+            <td class="meta">{{ m.saved_at }}</td>
+          {% endif %}
+          <td>
+            <form method="post" action="{{ url_for('admin.delete_model', ticker=m.ticker) }}"
+                  onsubmit="return confirm('Delete the saved rule for {{ m.ticker }}? It will disappear from the advisor.');">
+              <input type="hidden" name="csrf" value="{{ csrf_token() }}">
+              <button type="submit" class="danger">Delete</button>
+            </form>
+          </td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+    </div>
+    {% endif %}
+  </div>
+
+  {% if history %}
+  <div class="card">
+    <div class="source-tag">Recent jobs</div>
+    <table class="grid">
+      <thead><tr><th>Tickers</th><th>Settings</th><th>Status</th><th>Time</th><th>Outcome</th></tr></thead>
+      <tbody>
+      {% for h in history %}
+        <tr>
+          <td>{{ h.request.tickers|join(', ') }}</td>
+          <td class="meta">pop {{ h.request.population }} · {{ h.request.generations }} gens · seed {{ h.request.seed }}</td>
+          <td><span class="pill {{ h.status }}">{{ h.status }}</span></td>
+          <td class="meta">{{ "%.0f"|format(h.elapsed_s or 0) }} s</td>
+          <td class="meta">{% if h.result %}{{ h.result.rule_text }}{% elif h.error %}{{ h.error }}{% endif %}</td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% endif %}
+{% endblock %}
+
+{% block scripts %}
+<script>
+(function () {
+  const statusUrl = "{{ url_for('admin.job_status') }}";
+  const card = document.getElementById('job-card');
+  const bar = document.getElementById('job-bar');
+  const log = document.getElementById('job-log');
+  const pill = document.getElementById('job-status');
+  const elapsed = document.getElementById('job-elapsed');
+  const errBox = document.getElementById('job-error');
+  const resBox = document.getElementById('job-result');
+  const btn = document.getElementById('train-btn');
+  let wasBusy = {{ 'true' if busy else 'false' }};
+
+  function render(job) {
+    if (!job) return;
+    card.hidden = false;
+    pill.textContent = job.status;
+    pill.className = 'pill ' + job.status;
+    bar.style.width = job.progress_pct + '%';
+    if (job.elapsed_s != null) elapsed.textContent = ' · ' + Math.round(job.elapsed_s) + ' s';
+    const atBottom = log.scrollTop + log.clientHeight >= log.scrollHeight - 8;
+    log.textContent = job.log.join('\n');
+    if (atBottom) log.scrollTop = log.scrollHeight;
+    errBox.hidden = !job.error;  errBox.textContent = job.error || '';
+    resBox.hidden = !job.result;
+    if (job.result) resBox.innerHTML = '<strong>Evolved rule:</strong> ' + job.result.rule_text;
+  }
+
+  async function poll() {
+    try {
+      const r = await fetch(statusUrl, {credentials: 'same-origin'});
+      if (r.status === 401) { window.location = "{{ url_for('admin.login') }}"; return; }
+      const data = await r.json();
+      render(data.job);
+      btn.disabled = data.busy;
+      btn.textContent = data.busy ? 'Training in progress…' : 'Start training';
+      if (wasBusy && !data.busy) { window.location.reload(); return; }  // refresh model table
+      wasBusy = data.busy;
+      setTimeout(poll, data.busy ? 1500 : 6000);
+    } catch (e) { setTimeout(poll, 5000); }
+  }
+  poll();
+})();
+</script>
+{% endblock %}

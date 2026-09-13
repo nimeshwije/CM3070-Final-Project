@@ -1,6 +1,5 @@
 import json
 
-import pandas as pd
 import pytest
 
 from advisor.data import synthetic_gbm

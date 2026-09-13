@@ -37,7 +37,6 @@ def test_costs_reduce_returns():
 
 
 def test_always_flat_rule_has_zero_return():
-    # Impossible entry: rsi_buy at minimum bound means (almost) never enters.
     g = Genome(short_window=10, long_window=40, rsi_period=14, rsi_buy=10, rsi_sell=95)
     prices = pd.Series(
         np.linspace(100, 200, 300),

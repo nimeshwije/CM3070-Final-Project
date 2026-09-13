@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %}Admin login — Evolutionary Financial Advisor{% endblock %}
+{% block heading %}Admin login{% endblock %}
+{% block subheading %}The training system is restricted to administrators.{% endblock %}
+{% block content %}
+  {% if using_default_password %}
+    <div class="warn"><strong>Development mode:</strong> <code>ADVISOR_ADMIN_PASSWORD</code> is not set,
+      so the default password <code>admin</code> is active. Set the environment variable before sharing this app.</div>
+  {% endif %}
+  <div class="card" style="max-width:420px">
+    <form method="post" class="controls" style="flex-direction:column; align-items:stretch">
+      <label for="password"><strong>Password</strong></label>
+      <input type="password" id="password" name="password" autocomplete="current-password" autofocus required>
+      <button type="submit" class="primary">Log in</button>
+    </form>
+  </div>
+{% endblock %}
