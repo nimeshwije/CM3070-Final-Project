@@ -47,23 +47,47 @@ Strict rules:
 - Mention the recommended action ({action}) explicitly.
 - Plain language only: no jargon beyond "moving average" and "RSI",
   and briefly gloss RSI as a momentum gauge if you use the term.
-"""
+{position_note}"""
+
+_POSITION_NOTES = {
+    None: "",
+    True: ("- The user has told us they CURRENTLY HOLD this asset; address them as such "
+           "(e.g. 'keep holding' rather than 'stay in cash').\n"),
+    False: ("- The user has told us they DO NOT currently hold this asset; address them as "
+            "such (e.g. 'no need to buy yet' rather than 'keep holding').\n"),
+}
+
+
+def _action_phrase(decision: Decision) -> str:
+    """Headline phrase for the template, aware of mode and user position."""
+    invested = decision.stance == "in_market"
+    if decision.mode == "position":
+        holds = bool(decision.holds_position)
+        return {
+            ("BUY", False): "the rule recommends BUYING: it is currently in the market and you are not",
+            ("SELL", True): "the rule recommends SELLING: it is currently in cash and you still hold the asset",
+            ("HOLD", True): "the rule recommends HOLDING: keep the position you already have",
+            ("HOLD", False): ("the rule recommends HOLDING off: you do not hold the asset and "
+                              "the rule is not signalling an entry, so stay in cash"),
+        }[(decision.action, holds)]
+    return {
+        "BUY": "the rule recommends BUYING (moving your allocation into the market)",
+        "SELL": "the rule recommends SELLING (moving your allocation to cash)",
+        "HOLD": ("the rule recommends HOLDING your current stance ("
+                 + ("staying invested" if invested else "staying in cash") + ")"),
+    }[decision.action]
 
 
 def _template_explanation(decision: Decision) -> str:
     """Deterministic fallback prose, built only from the Decision itself."""
-    action_phrases = {
-        "BUY": "the rule recommends BUYING (moving your allocation into the market)",
-        "SELL": "the rule recommends SELLING (moving your allocation to cash)",
-        "HOLD": (
-            "the rule recommends HOLDING your current stance ("
-            + ("staying invested" if decision.stance == "in_market" else "staying in cash")
-            + ")"
-        ),
-    }
     reasons = "; ".join(decision.reasons)
+    fresh = ""
+    if decision.signal_changed:
+        fresh = (" Note: the rule's own signal changed today (it "
+                 + ("entered the market" if decision.signal == "enter" else "moved to cash")
+                 + "), so this is a fresh signal rather than a continuing one.")
     return (
-        f"For {decision.ticker} as of {decision.as_of}: {action_phrases[decision.action]}. "
+        f"For {decision.ticker} as of {decision.as_of}: {_action_phrase(decision)}.{fresh} "
         f"Why: {reasons}. {DISCLAIMER}"
     )
 
@@ -114,7 +138,10 @@ def explain(
     """
     if use_llm:
         prompt = (
-            _SYSTEM_RULES.format(action=decision.action)
+            _SYSTEM_RULES.format(
+                action=decision.action,
+                position_note=_POSITION_NOTES[decision.holds_position],
+            )
             + "\nDecision data (JSON):\n"
             + json.dumps(decision.to_dict(), indent=2)
             + "\n\nNow write the explanation:"

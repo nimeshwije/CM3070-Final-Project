@@ -31,6 +31,14 @@
   .badge.BUY  { background:var(--buy); }
   .badge.SELL { background:var(--sell); }
   .badge.HOLD { background:var(--hold); }
+  .headline { display:flex; align-items:center; gap:12px; flex-wrap:wrap; }
+  .signal-pill { display:inline-block; padding:4px 12px; border-radius:999px; font-size:.82rem;
+                 font-weight:600; background:#e6eeff; color:var(--accent); border:1px solid #c9d8ff; }
+  .position-row { display:flex; gap:8px; flex-wrap:wrap; margin-top:10px; }
+  .stance { display:inline-block; padding:3px 10px; border-radius:6px; font-size:.82rem; font-weight:600;
+            background:#eef1f6; color:var(--muted); }
+  .stance.in_market { background:#e8f6ee; color:var(--buy); }
+  .stance.in_cash   { background:#fff8e6; color:var(--hold); }
   .meta { color:var(--muted); font-size:.9rem; margin-top:6px; }
   ul.reasons { margin:10px 0 0; padding-left:20px; }
   ul.reasons li { margin:4px 0; }

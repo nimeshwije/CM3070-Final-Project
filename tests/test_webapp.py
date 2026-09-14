@@ -84,7 +84,67 @@ def test_api_recommendation_json(client, models_dir):
     train_rule(TrainRequest(tickers=["SYNY"], population=8, generations=2, folds=2, synthetic=True))
     data = client.get("/api/recommendation/SYNY?llm=off").get_json()
     assert data["decision"]["action"] in {"BUY", "SELL", "HOLD"}
+    assert data["decision"]["mode"] == "signal"          # no ?holds= -> signal mode
     assert data["explanation"]["source"] == "template"
+
+
+def test_api_holds_parameter_selects_position_mode(client, models_dir):
+    train_rule(TrainRequest(tickers=["SYNP"], population=8, generations=2, folds=2, synthetic=True))
+    yes = client.get("/api/recommendation/SYNP?llm=off&holds=1").get_json()["decision"]
+    no = client.get("/api/recommendation/SYNP?llm=off&holds=0").get_json()["decision"]
+    assert yes["mode"] == "position" and yes["holds_position"] is True
+    assert no["mode"] == "position" and no["holds_position"] is False
+    assert yes["stance"] == no["stance"]
+    assert (yes["action"], no["action"]) == (
+        ("HOLD", "BUY") if yes["stance"] == "in_market" else ("SELL", "HOLD"))
+    # unrecognised value -> signal mode rather than a 500
+    assert client.get("/api/recommendation/SYNP?llm=off&holds=maybe").get_json()["decision"]["mode"] == "signal"
+
+
+def test_holds_checkbox_drives_position_aware_advice(client, models_dir):
+    """The web advisor always runs in position mode; the checkbox is the
+    user's position and, like the LLM box, absent-on-submit means OFF."""
+    train_rule(TrainRequest(tickers=["SYNH"], population=8, generations=2, folds=2, synthetic=True))
+    stance = client.get("/api/recommendation/SYNH?llm=off").get_json()["decision"]["stance"]
+
+    def badge(html):
+        return re.search(r'class="badge (BUY|SELL|HOLD)"', html).group(1)
+
+    def holds_checked(html):
+        return "checked" in html.split('name="holds"')[1].split(">")[0]
+
+    fresh = client.get("/").get_data(as_text=True)                     # first visit: holds nothing
+    assert not holds_checked(fresh) and "You: hold nothing" in fresh
+    without = client.get("/?ticker=SYNH&llm=off").get_data(as_text=True)
+    with_ = client.get("/?ticker=SYNH&llm=off&holds=on").get_data(as_text=True)
+    assert not holds_checked(without) and holds_checked(with_)
+    assert "You: hold this asset" in with_
+    expected = ("BUY", "HOLD") if stance == "in_market" else ("HOLD", "SELL")
+    assert (badge(without), badge(with_)) == expected
+    assert ("Rule: in the market" if stance == "in_market" else "Rule: in cash") in without
+
+
+def test_signal_changed_pill_only_on_transition_days(client, models_dir, monkeypatch):
+    train_rule(TrainRequest(tickers=["SYNS"], population=8, generations=2, folds=2, synthetic=True))
+    import webapp.app as app_mod
+    from advisor import rule_engine
+
+    real_decide = rule_engine.decide
+
+    def forcing(signal):
+        def forced(*a, **kw):
+            d = real_decide(*a, **kw)
+            d.signal, d.signal_changed = signal, signal != "none"
+            return d
+        return forced
+
+    monkeypatch.setattr(app_mod, "decide", forcing("none"))
+    assert "Signal changed today" not in client.get("/?ticker=SYNS&llm=off").get_data(as_text=True)
+    monkeypatch.setattr(app_mod, "decide", forcing("enter"))
+    html = client.get("/?ticker=SYNS&llm=off").get_data(as_text=True)
+    assert "Signal changed today" in html and "entered the market" in html
+    monkeypatch.setattr(app_mod, "decide", forcing("exit"))
+    assert "moved to cash" in client.get("/?ticker=SYNS&llm=off").get_data(as_text=True)
 
 
 # ------------------------------------------------------------------ auth

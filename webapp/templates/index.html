@@ -13,6 +13,9 @@
           <option value="{{ t }}" {% if t == selected %}selected{% endif %}>{{ t }}</option>
         {% endfor %}
       </select>
+      <label title="Nothing you tick here is stored; it only shapes today's advice.">
+        <input type="checkbox" name="holds" value="on" {% if holds %}checked{% endif %}
+               onchange="this.form.submit()"> I currently hold this asset</label>
       <label><input type="checkbox" name="llm" value="on" {% if use_llm %}checked{% endif %}
              onchange="this.form.submit()"> Use local LLM explanation</label>
       <button type="submit" class="primary">Get advice</button>
@@ -22,12 +25,21 @@
 
   {% if decision %}
   <div class="card">
-    <span class="badge {{ decision.action }}">{{ decision.action }}</span>
+    <div class="headline">
+      <span class="badge {{ decision.action }}">{{ decision.action }}</span>
+      {% if decision.signal_changed %}
+        <span class="signal-pill">Signal changed today &middot;
+          rule {{ "entered the market" if decision.signal == "enter" else "moved to cash" }}</span>
+      {% endif %}
+    </div>
     <div class="meta">
       {{ decision.ticker }} &middot; as of {{ decision.as_of }} &middot;
       last price {{ "%.2f"|format(decision.price) }} &middot;
-      rule stance: {{ "invested" if decision.stance == "in_market" else "in cash" }} &middot;
       data source: {{ data_source }}
+    </div>
+    <div class="position-row">
+      <span class="stance {{ decision.stance }}">Rule: {{ "in the market" if decision.stance == "in_market" else "in cash" }}</span>
+      <span class="stance you">You: {{ "hold this asset" if decision.holds_position else "hold nothing" }}</span>
     </div>
     <ul class="reasons">
       {% for r in decision.reasons %}<li>{{ r }}</li>{% endfor %}

@@ -62,6 +62,22 @@ def _equity_png(prices, genome) -> str:
     return base64.b64encode(buf.getvalue()).decode()
 
 
+_TRUE = {"1", "true", "on", "yes"}
+_FALSE = {"0", "false", "off", "no"}
+
+
+def _parse_holds(value: str | None) -> bool | None:
+    """?holds= for the JSON API: absent/unrecognised -> None (signal mode)."""
+    if value is None:
+        return None
+    v = value.strip().lower()
+    if v in _TRUE:
+        return True
+    if v in _FALSE:
+        return False
+    return None
+
+
 def create_app(config: dict | None = None) -> Flask:
     """Application factory (lets the test-suite build isolated instances)."""
     app = Flask(__name__)
@@ -91,6 +107,10 @@ def create_app(config: dict | None = None) -> Flask:
             use_llm = request.args.get("llm") == "on"
         else:
             use_llm = request.args.get("llm", "on") != "off"
+        # "I currently hold this asset" -- same unticked-checkbox rule; a
+        # fresh visit assumes the user holds nothing.  The web advisor always
+        # runs in position mode; the value is never stored anywhere.
+        holds = request.args.get("holds") == "on"
 
         if not tickers:
             return render_template("index.html", tickers=[], error=(
@@ -103,14 +123,14 @@ def create_app(config: dict | None = None) -> Flask:
             genome = art["genome_obj"]
             ps = fetch_prices(selected)
             recent = ps.prices.iloc[-RECENT_DAYS:]
-            decision = decide(selected, recent, genome)
+            decision = decide(selected, recent, genome, holds_position=holds)
             explanation = explain(decision, use_llm=use_llm)
             chart = _equity_png(recent, genome)
             return render_template(
                 "index.html",
                 tickers=tickers, selected=selected, decision=decision,
                 explanation=explanation, artifact=art, chart=chart,
-                data_source=ps.source, use_llm=use_llm, error=None,
+                data_source=ps.source, use_llm=use_llm, holds=holds, error=None,
             )
         except Exception as exc:
             logging.exception("Failed to build recommendation")
@@ -119,10 +139,15 @@ def create_app(config: dict | None = None) -> Flask:
 
     @app.route("/api/recommendation/<ticker>")
     def api_recommendation(ticker: str):
-        """Machine-readable endpoint: the auditable decision + explanation."""
+        """Machine-readable endpoint: the auditable decision + explanation.
+
+        ?holds=1|0 selects position mode (the user does / does not hold the
+        asset); omit it for signal mode (the rule's own transition today).
+        """
         art = load_artifact(ticker)
         ps = fetch_prices(ticker)
-        decision = decide(ticker, ps.prices.iloc[-RECENT_DAYS:], art["genome_obj"])
+        decision = decide(ticker, ps.prices.iloc[-RECENT_DAYS:], art["genome_obj"],
+                          holds_position=_parse_holds(request.args.get("holds")))
         explanation = explain(decision, use_llm=request.args.get("llm", "on") != "off")
         return jsonify({
             "decision": decision.to_dict(),
