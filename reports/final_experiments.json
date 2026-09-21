@@ -1,0 +1,1966 @@
+{
+ "A_champion": {
+  "genome": {
+   "short_window": 5,
+   "long_window": 222,
+   "rsi_period": 30,
+   "rsi_buy": 49,
+   "rsi_sell": 76
+  },
+  "rule": "Buy when the 5-day average price rises above the 222-day average and the 30-day RSI is below 49; sell when the 5-day average falls below the 222-day average or the RSI rises above 76.",
+  "seconds": 13.299999237060547,
+  "history": [
+   {
+    "generation": 0,
+    "best_fitness": 0.6897935283145215,
+    "mean_fitness": -0.5103471450880817,
+    "best_genome": {
+     "short_window": 8,
+     "long_window": 178,
+     "rsi_period": 11,
+     "rsi_buy": 41,
+     "rsi_sell": 89
+    }
+   },
+   {
+    "generation": 1,
+    "best_fitness": 0.8538523144581066,
+    "mean_fitness": 0.006973250353758638,
+    "best_genome": {
+     "short_window": 5,
+     "long_window": 144,
+     "rsi_period": 23,
+     "rsi_buy": 48,
+     "rsi_sell": 79
+    }
+   },
+   {
+    "generation": 2,
+    "best_fitness": 0.8538523144581066,
+    "mean_fitness": 0.1463185840535823,
+    "best_genome": {
+     "short_window": 5,
+     "long_window": 144,
+     "rsi_period": 23,
+     "rsi_buy": 48,
+     "rsi_sell": 79
+    }
+   },
+   {
+    "generation": 3,
+    "best_fitness": 0.9574475959874262,
+    "mean_fitness": 0.3258559462227574,
+    "best_genome": {
+     "short_window": 5,
+     "long_window": 222,
+     "rsi_period": 25,
+     "rsi_buy": 48,
+     "rsi_sell": 74
+    }
+   },
+   {
+    "generation": 4,
+    "best_fitness": 0.9772171521898008,
+    "mean_fitness": 0.3836338004997668,
+    "best_genome": {
+     "short_window": 35,
+     "long_window": 202,
+     "rsi_period": 12,
+     "rsi_buy": 38,
+     "rsi_sell": 83
+    }
+   },
+   {
+    "generation": 5,
+    "best_fitness": 1.0078021346888961,
+    "mean_fitness": 0.3875035581049275,
+    "best_genome": {
+     "short_window": 23,
+     "long_window": 250,
+     "rsi_period": 12,
+     "rsi_buy": 38,
+     "rsi_sell": 83
+    }
+   },
+   {
+    "generation": 6,
+    "best_fitness": 1.078713542821459,
+    "mean_fitness": 0.4893826172713717,
+    "best_genome": {
+     "short_window": 5,
+     "long_window": 222,
+     "rsi_period": 29,
+     "rsi_buy": 50,
+     "rsi_sell": 74
+    }
+   },
+   {
+    "generation": 7,
+    "best_fitness": 1.078713542821459,
+    "mean_fitness": 0.5556486495062011,
+    "best_genome": {
+     "short_window": 5,
+     "long_window": 222,
+     "rsi_period": 29,
+     "rsi_buy": 50,
+     "rsi_sell": 74
+    }
+   },
+   {
+    "generation": 8,
+    "best_fitness": 1.1298263692461041,
+    "mean_fitness": 0.6209561869875705,
+    "best_genome": {
+     "short_window": 5,
+     "long_window": 222,
+     "rsi_period": 29,
+     "rsi_buy": 50,
+     "rsi_sell": 76
+    }
+   },
+   {
+    "generation": 9,
+    "best_fitness": 1.1298263692461041,
+    "mean_fitness": 0.5153624486238283,
+    "best_genome": {
+     "short_window": 5,
+     "long_window": 222,
+     "rsi_period": 29,
+     "rsi_buy": 50,
+     "rsi_sell": 76
+    }
+   },
+   {
+    "generation": 10,
+    "best_fitness": 1.1298263692461041,
+    "mean_fitness": 0.6100108422613908,
+    "best_genome": {
+     "short_window": 5,
+     "long_window": 222,
+     "rsi_period": 29,
+     "rsi_buy": 50,
+     "rsi_sell": 76
+    }
+   },
+   {
+    "generation": 11,
+    "best_fitness": 1.1852465181459233,
+    "mean_fitness": 0.77718648636028,
+    "best_genome": {
+     "short_window": 5,
+     "long_window": 222,
+     "rsi_period": 30,
+     "rsi_buy": 49,
+     "rsi_sell": 76
+    }
+   },
+   {
+    "generation": 12,
+    "best_fitness": 1.1852465181459233,
+    "mean_fitness": 0.9346126139855528,
+    "best_genome": {
+     "short_window": 5,
+     "long_window": 222,
+     "rsi_period": 30,
+     "rsi_buy": 49,
+     "rsi_sell": 76
+    }
+   },
+   {
+    "generation": 13,
+    "best_fitness": 1.1852465181459233,
+    "mean_fitness": 0.8546729583222353,
+    "best_genome": {
+     "short_window": 5,
+     "long_window": 222,
+     "rsi_period": 30,
+     "rsi_buy": 49,
+     "rsi_sell": 76
+    }
+   },
+   {
+    "generation": 14,
+    "best_fitness": 1.1852465181459233,
+    "mean_fitness": 0.8566954682264291,
+    "best_genome": {
+     "short_window": 5,
+     "long_window": 222,
+     "rsi_period": 30,
+     "rsi_buy": 49,
+     "rsi_sell": 76
+    }
+   },
+   {
+    "generation": 15,
+    "best_fitness": 1.1852465181459233,
+    "mean_fitness": 0.8378034781001337,
+    "best_genome": {
+     "short_window": 5,
+     "long_window": 222,
+     "rsi_period": 30,
+     "rsi_buy": 49,
+     "rsi_sell": 76
+    }
+   },
+   {
+    "generation": 16,
+    "best_fitness": 1.1852465181459233,
+    "mean_fitness": 0.9194623971119901,
+    "best_genome": {
+     "short_window": 5,
+     "long_window": 222,
+     "rsi_period": 30,
+     "rsi_buy": 49,
+     "rsi_sell": 76
+    }
+   },
+   {
+    "generation": 17,
+    "best_fitness": 1.1852465181459233,
+    "mean_fitness": 0.8949645125847314,
+    "best_genome": {
+     "short_window": 5,
+     "long_window": 222,
+     "rsi_period": 30,
+     "rsi_buy": 49,
+     "rsi_sell": 76
+    }
+   },
+   {
+    "generation": 18,
+    "best_fitness": 1.1852465181459233,
+    "mean_fitness": 0.9165117181831398,
+    "best_genome": {
+     "short_window": 5,
+     "long_window": 222,
+     "rsi_period": 30,
+     "rsi_buy": 49,
+     "rsi_sell": 76
+    }
+   },
+   {
+    "generation": 19,
+    "best_fitness": 1.1852465181459233,
+    "mean_fitness": 0.8681164228321332,
+    "best_genome": {
+     "short_window": 5,
+     "long_window": 222,
+     "rsi_period": 30,
+     "rsi_buy": 49,
+     "rsi_sell": 76
+    }
+   },
+   {
+    "generation": 20,
+    "best_fitness": 1.1852465181459233,
+    "mean_fitness": 0.863519864909675,
+    "best_genome": {
+     "short_window": 5,
+     "long_window": 222,
+     "rsi_period": 30,
+     "rsi_buy": 49,
+     "rsi_sell": 76
+    }
+   },
+   {
+    "generation": 21,
+    "best_fitness": 1.1852465181459233,
+    "mean_fitness": 0.8125603554476531,
+    "best_genome": {
+     "short_window": 5,
+     "long_window": 222,
+     "rsi_period": 30,
+     "rsi_buy": 49,
+     "rsi_sell": 76
+    }
+   },
+   {
+    "generation": 22,
+    "best_fitness": 1.1852465181459233,
+    "mean_fitness": 0.8145086265479857,
+    "best_genome": {
+     "short_window": 5,
+     "long_window": 222,
+     "rsi_period": 30,
+     "rsi_buy": 49,
+     "rsi_sell": 76
+    }
+   },
+   {
+    "generation": 23,
+    "best_fitness": 1.1852465181459233,
+    "mean_fitness": 0.8422734955187338,
+    "best_genome": {
+     "short_window": 5,
+     "long_window": 222,
+     "rsi_period": 30,
+     "rsi_buy": 49,
+     "rsi_sell": 76
+    }
+   },
+   {
+    "generation": 24,
+    "best_fitness": 1.1852465181459233,
+    "mean_fitness": 0.9433260267258328,
+    "best_genome": {
+     "short_window": 5,
+     "long_window": 222,
+     "rsi_period": 30,
+     "rsi_buy": 49,
+     "rsi_sell": 76
+    }
+   },
+   {
+    "generation": 25,
+    "best_fitness": 1.1852465181459233,
+    "mean_fitness": 0.848192459075025,
+    "best_genome": {
+     "short_window": 5,
+     "long_window": 222,
+     "rsi_period": 30,
+     "rsi_buy": 49,
+     "rsi_sell": 76
+    }
+   },
+   {
+    "generation": 26,
+    "best_fitness": 1.1852465181459233,
+    "mean_fitness": 0.9450719701076841,
+    "best_genome": {
+     "short_window": 5,
+     "long_window": 222,
+     "rsi_period": 30,
+     "rsi_buy": 49,
+     "rsi_sell": 76
+    }
+   },
+   {
+    "generation": 27,
+    "best_fitness": 1.1852465181459233,
+    "mean_fitness": 0.8554456625829648,
+    "best_genome": {
+     "short_window": 5,
+     "long_window": 222,
+     "rsi_period": 30,
+     "rsi_buy": 49,
+     "rsi_sell": 76
+    }
+   },
+   {
+    "generation": 28,
+    "best_fitness": 1.1852465181459233,
+    "mean_fitness": 0.8255069866718486,
+    "best_genome": {
+     "short_window": 5,
+     "long_window": 222,
+     "rsi_period": 30,
+     "rsi_buy": 49,
+     "rsi_sell": 76
+    }
+   },
+   {
+    "generation": 29,
+    "best_fitness": 1.1852465181459233,
+    "mean_fitness": 0.8796341860237722,
+    "best_genome": {
+     "short_window": 5,
+     "long_window": 222,
+     "rsi_period": 30,
+     "rsi_buy": 49,
+     "rsi_sell": 76
+    }
+   },
+   {
+    "generation": 30,
+    "best_fitness": 1.1852465181459233,
+    "mean_fitness": 0.8860195029433588,
+    "best_genome": {
+     "short_window": 5,
+     "long_window": 222,
+     "rsi_period": 30,
+     "rsi_buy": 49,
+     "rsi_sell": 76
+    }
+   },
+   {
+    "generation": 31,
+    "best_fitness": 1.1852465181459233,
+    "mean_fitness": 0.9006458835283151,
+    "best_genome": {
+     "short_window": 5,
+     "long_window": 222,
+     "rsi_period": 30,
+     "rsi_buy": 49,
+     "rsi_sell": 76
+    }
+   },
+   {
+    "generation": 32,
+    "best_fitness": 1.1852465181459233,
+    "mean_fitness": 0.882979560738175,
+    "best_genome": {
+     "short_window": 5,
+     "long_window": 222,
+     "rsi_period": 30,
+     "rsi_buy": 49,
+     "rsi_sell": 76
+    }
+   },
+   {
+    "generation": 33,
+    "best_fitness": 1.1852465181459233,
+    "mean_fitness": 0.8752388281835002,
+    "best_genome": {
+     "short_window": 5,
+     "long_window": 222,
+     "rsi_period": 30,
+     "rsi_buy": 49,
+     "rsi_sell": 76
+    }
+   },
+   {
+    "generation": 34,
+    "best_fitness": 1.1852465181459233,
+    "mean_fitness": 0.8266578386698874,
+    "best_genome": {
+     "short_window": 5,
+     "long_window": 222,
+     "rsi_period": 30,
+     "rsi_buy": 49,
+     "rsi_sell": 76
+    }
+   },
+   {
+    "generation": 35,
+    "best_fitness": 1.1852465181459233,
+    "mean_fitness": 0.8516972358152258,
+    "best_genome": {
+     "short_window": 5,
+     "long_window": 222,
+     "rsi_period": 30,
+     "rsi_buy": 49,
+     "rsi_sell": 76
+    }
+   },
+   {
+    "generation": 36,
+    "best_fitness": 1.1852465181459233,
+    "mean_fitness": 0.8741419083788136,
+    "best_genome": {
+     "short_window": 5,
+     "long_window": 222,
+     "rsi_period": 30,
+     "rsi_buy": 49,
+     "rsi_sell": 76
+    }
+   },
+   {
+    "generation": 37,
+    "best_fitness": 1.1852465181459233,
+    "mean_fitness": 0.8761510620155105,
+    "best_genome": {
+     "short_window": 5,
+     "long_window": 222,
+     "rsi_period": 30,
+     "rsi_buy": 49,
+     "rsi_sell": 76
+    }
+   },
+   {
+    "generation": 38,
+    "best_fitness": 1.1852465181459233,
+    "mean_fitness": 0.844291550285389,
+    "best_genome": {
+     "short_window": 5,
+     "long_window": 222,
+     "rsi_period": 30,
+     "rsi_buy": 49,
+     "rsi_sell": 76
+    }
+   },
+   {
+    "generation": 39,
+    "best_fitness": 1.1852465181459233,
+    "mean_fitness": 0.8242637142379657,
+    "best_genome": {
+     "short_window": 5,
+     "long_window": 222,
+     "rsi_period": 30,
+     "rsi_buy": 49,
+     "rsi_sell": 76
+    }
+   },
+   {
+    "generation": 40,
+    "best_fitness": 1.1852465181459233,
+    "mean_fitness": 0.7570692800313646,
+    "best_genome": {
+     "short_window": 5,
+     "long_window": 222,
+     "rsi_period": 30,
+     "rsi_buy": 49,
+     "rsi_sell": 76
+    }
+   }
+  ],
+  "train": {
+   "total_return": 6.4774895454615145,
+   "sharpe": 1.4640871567079992,
+   "max_drawdown": -0.28072202332181684,
+   "annual_volatility": 0.2140706562664074,
+   "n_trades": 15.0,
+   "time_in_market": 0.5395189003436426,
+   "benchmark_total_return": 5.917483063549003,
+   "benchmark_sharpe": 1.1076329279912724,
+   "benchmark_max_drawdown": -0.38515910673560916,
+   "benchmark_annual_volatility": 0.29019258461056835
+  },
+  "test": {
+   "total_return": 0.14108144987574223,
+   "sharpe": 0.484616508690625,
+   "max_drawdown": -0.12024252511520217,
+   "annual_volatility": 0.10246573580530696,
+   "n_trades": 3.0,
+   "time_in_market": 0.29906542056074764,
+   "benchmark_total_return": 0.37775653262442455,
+   "benchmark_sharpe": 0.5304913022222976,
+   "benchmark_max_drawdown": -0.3091281921353881,
+   "benchmark_annual_volatility": 0.27356401136579495
+  },
+  "train_range": [
+   "2015-01-02",
+   "2021-12-07"
+  ],
+  "test_range": [
+   "2021-12-08",
+   "2024-11-29"
+  ]
+ },
+ "B_ablation": {
+  "genome": {
+   "short_window": 27,
+   "long_window": 188,
+   "rsi_period": 18,
+   "rsi_buy": 34,
+   "rsi_sell": 80
+  },
+  "rule": "Buy when the 27-day average price rises above the 188-day average and the 18-day RSI is below 34; sell when the 27-day average falls below the 188-day average or the RSI rises above 80.",
+  "seconds": 15.573017358779907,
+  "train": {
+   "total_return": 6.820173157909264,
+   "sharpe": 1.5984472622396177,
+   "max_drawdown": -0.2588688129211175,
+   "annual_volatility": 0.19801604050562224,
+   "n_trades": 11.0,
+   "time_in_market": 0.3940435280641466,
+   "benchmark_total_return": 5.917483063549003,
+   "benchmark_sharpe": 1.1076329279912724,
+   "benchmark_max_drawdown": -0.38515910673560916,
+   "benchmark_annual_volatility": 0.29019258461056835
+  },
+  "test": {
+   "total_return": -0.02746898890313254,
+   "sharpe": -0.07195638946069456,
+   "max_drawdown": -0.14609841352850972,
+   "annual_volatility": 0.08266127442228853,
+   "n_trades": 2.0,
+   "time_in_market": 0.1842456608811749,
+   "benchmark_total_return": 0.37775653262442455,
+   "benchmark_sharpe": 0.5304913022222976,
+   "benchmark_max_drawdown": -0.3091281921353881,
+   "benchmark_annual_volatility": 0.27356401136579495
+  },
+  "train_range": [
+   "2015-01-02",
+   "2021-12-07"
+  ],
+  "test_range": [
+   "2021-12-08",
+   "2024-11-29"
+  ],
+  "eval_no_cost": {
+   "train": {
+    "total_return": 6.906690025475199,
+    "sharpe": 1.6065529619321357,
+    "max_drawdown": -0.2588688129211174,
+    "annual_volatility": 0.19800519138139563,
+    "n_trades": 11.0,
+    "time_in_market": 0.3940435280641466,
+    "benchmark_total_return": 5.917483063549003,
+    "benchmark_sharpe": 1.1076329279912724,
+    "benchmark_max_drawdown": -0.38515910673560916,
+    "benchmark_annual_volatility": 0.29019258461056835
+   },
+   "test": {
+    "total_return": -0.025523744717402486,
+    "sharpe": -0.06381011917131968,
+    "max_drawdown": -0.1452436571856952,
+    "annual_volatility": 0.08266885766539717,
+    "n_trades": 2.0,
+    "time_in_market": 0.1842456608811749,
+    "benchmark_total_return": 0.37775653262442455,
+    "benchmark_sharpe": 0.5304913022222976,
+    "benchmark_max_drawdown": -0.3091281921353881,
+    "benchmark_annual_volatility": 0.27356401136579495
+   },
+   "train_range": [
+    "2015-01-02",
+    "2021-12-07"
+   ],
+   "test_range": [
+    "2021-12-08",
+    "2024-11-29"
+   ]
+  }
+ },
+ "C_multiseed": [
+  {
+   "config": "hardened",
+   "seed": 1,
+   "genome": {
+    "short_window": 5,
+    "long_window": 219,
+    "rsi_period": 19,
+    "rsi_buy": 44,
+    "rsi_sell": 80
+   },
+   "is_sharpe": 1.434561786879149,
+   "oos_sharpe": 0.4515713803795582,
+   "oos_return": 0.12993281631661757,
+   "oos_mdd": -0.12024252511520217,
+   "oos_vol": 0.10270093966980397,
+   "oos_trades": 3.0,
+   "bh_sharpe": 0.5304913022222976,
+   "seconds": 14.561366319656372
+  },
+  {
+   "config": "hardened",
+   "seed": 2,
+   "genome": {
+    "short_window": 5,
+    "long_window": 222,
+    "rsi_period": 30,
+    "rsi_buy": 49,
+    "rsi_sell": 76
+   },
+   "is_sharpe": 1.4640871567079992,
+   "oos_sharpe": 0.484616508690625,
+   "oos_return": 0.14108144987574223,
+   "oos_mdd": -0.12024252511520217,
+   "oos_vol": 0.10246573580530696,
+   "oos_trades": 3.0,
+   "bh_sharpe": 0.5304913022222976,
+   "seconds": 12.993098497390747
+  },
+  {
+   "config": "hardened",
+   "seed": 3,
+   "genome": {
+    "short_window": 50,
+    "long_window": 153,
+    "rsi_period": 23,
+    "rsi_buy": 38,
+    "rsi_sell": 79
+   },
+   "is_sharpe": 1.2638473330045692,
+   "oos_sharpe": 0.004007112282266283,
+   "oos_return": -0.00868749459300544,
+   "oos_mdd": -0.15261308556102327,
+   "oos_vol": 0.08057473767743065,
+   "oos_trades": 6.0,
+   "bh_sharpe": 0.5304913022222976,
+   "seconds": 16.329633235931396
+  },
+  {
+   "config": "hardened",
+   "seed": 4,
+   "genome": {
+    "short_window": 5,
+    "long_window": 221,
+    "rsi_period": 18,
+    "rsi_buy": 43,
+    "rsi_sell": 80
+   },
+   "is_sharpe": 1.4598792213463327,
+   "oos_sharpe": 0.4515713803795582,
+   "oos_return": 0.12993281631661757,
+   "oos_mdd": -0.12024252511520217,
+   "oos_vol": 0.10270093966980397,
+   "oos_trades": 3.0,
+   "bh_sharpe": 0.5304913022222976,
+   "seconds": 16.494153022766113
+  },
+  {
+   "config": "hardened",
+   "seed": 5,
+   "genome": {
+    "short_window": 5,
+    "long_window": 217,
+    "rsi_period": 19,
+    "rsi_buy": 44,
+    "rsi_sell": 80
+   },
+   "is_sharpe": 1.434561786879149,
+   "oos_sharpe": 0.4515713803795582,
+   "oos_return": 0.12993281631661757,
+   "oos_mdd": -0.12024252511520217,
+   "oos_vol": 0.10270093966980397,
+   "oos_trades": 3.0,
+   "bh_sharpe": 0.5304913022222976,
+   "seconds": 14.688628196716309
+  },
+  {
+   "config": "hardened",
+   "seed": 6,
+   "genome": {
+    "short_window": 6,
+    "long_window": 20,
+    "rsi_period": 23,
+    "rsi_buy": 50,
+    "rsi_sell": 95
+   },
+   "is_sharpe": 1.8236126587142891,
+   "oos_sharpe": 0.452032587526898,
+   "oos_return": 0.18045720817342903,
+   "oos_mdd": -0.18176757090496254,
+   "oos_vol": 0.1472443309265274,
+   "oos_trades": 28.0,
+   "bh_sharpe": 0.5304913022222976,
+   "seconds": 13.136920690536499
+  },
+  {
+   "config": "hardened",
+   "seed": 7,
+   "genome": {
+    "short_window": 5,
+    "long_window": 222,
+    "rsi_period": 30,
+    "rsi_buy": 49,
+    "rsi_sell": 76
+   },
+   "is_sharpe": 1.4640871567079992,
+   "oos_sharpe": 0.484616508690625,
+   "oos_return": 0.14108144987574223,
+   "oos_mdd": -0.12024252511520217,
+   "oos_vol": 0.10246573580530696,
+   "oos_trades": 3.0,
+   "bh_sharpe": 0.5304913022222976,
+   "seconds": 13.034204244613647
+  },
+  {
+   "config": "hardened",
+   "seed": 8,
+   "genome": {
+    "short_window": 25,
+    "long_window": 192,
+    "rsi_period": 13,
+    "rsi_buy": 37,
+    "rsi_sell": 82
+   },
+   "is_sharpe": 1.4511475062866097,
+   "oos_sharpe": 0.2495591875036322,
+   "oos_return": 0.06348078607386287,
+   "oos_mdd": -0.15028155441870517,
+   "oos_vol": 0.10514320253021676,
+   "oos_trades": 3.0,
+   "bh_sharpe": 0.5304913022222976,
+   "seconds": 16.285005807876587
+  },
+  {
+   "config": "hardened",
+   "seed": 9,
+   "genome": {
+    "short_window": 5,
+    "long_window": 220,
+    "rsi_period": 21,
+    "rsi_buy": 45,
+    "rsi_sell": 79
+   },
+   "is_sharpe": 1.4419718082851107,
+   "oos_sharpe": 0.4515713803795582,
+   "oos_return": 0.12993281631661757,
+   "oos_mdd": -0.12024252511520217,
+   "oos_vol": 0.10270093966980397,
+   "oos_trades": 3.0,
+   "bh_sharpe": 0.5304913022222976,
+   "seconds": 14.683650493621826
+  },
+  {
+   "config": "hardened",
+   "seed": 10,
+   "genome": {
+    "short_window": 25,
+    "long_window": 194,
+    "rsi_period": 8,
+    "rsi_buy": 27,
+    "rsi_sell": 89
+   },
+   "is_sharpe": 1.3054877555679614,
+   "oos_sharpe": 0.28136071843652655,
+   "oos_return": 0.07397376177108805,
+   "oos_mdd": -0.14104934569043548,
+   "oos_vol": 0.10491597552215821,
+   "oos_trades": 3.0,
+   "bh_sharpe": 0.5304913022222976,
+   "seconds": 17.069153547286987
+  },
+  {
+   "config": "prototype",
+   "seed": 1,
+   "genome": {
+    "short_window": 29,
+    "long_window": 188,
+    "rsi_period": 28,
+    "rsi_buy": 39,
+    "rsi_sell": 77
+   },
+   "is_sharpe": 1.7693811890439926,
+   "oos_sharpe": 0.10214482189202115,
+   "oos_return": 0.013249614923656061,
+   "oos_mdd": -0.1467041864024482,
+   "oos_vol": 0.062385916421986654,
+   "oos_trades": 2.0,
+   "bh_sharpe": 0.5304913022222976,
+   "seconds": 15.370098114013672
+  },
+  {
+   "config": "prototype",
+   "seed": 2,
+   "genome": {
+    "short_window": 29,
+    "long_window": 192,
+    "rsi_period": 28,
+    "rsi_buy": 39,
+    "rsi_sell": 77
+   },
+   "is_sharpe": 1.7693811890439926,
+   "oos_sharpe": 0.10214482189202115,
+   "oos_return": 0.013249614923656061,
+   "oos_mdd": -0.1467041864024482,
+   "oos_vol": 0.062385916421986654,
+   "oos_trades": 2.0,
+   "bh_sharpe": 0.5304913022222976,
+   "seconds": 15.893328189849854
+  },
+  {
+   "config": "prototype",
+   "seed": 3,
+   "genome": {
+    "short_window": 38,
+    "long_window": 195,
+    "rsi_period": 16,
+    "rsi_buy": 32,
+    "rsi_sell": 81
+   },
+   "is_sharpe": 1.6215536706590465,
+   "oos_sharpe": 0.18941420884771407,
+   "oos_return": 0.0382951425209932,
+   "oos_mdd": -0.14585003643888628,
+   "oos_vol": 0.08652432213041203,
+   "oos_trades": 4.0,
+   "bh_sharpe": 0.5304913022222976,
+   "seconds": 15.464354038238525
+  },
+  {
+   "config": "prototype",
+   "seed": 4,
+   "genome": {
+    "short_window": 27,
+    "long_window": 188,
+    "rsi_period": 15,
+    "rsi_buy": 31,
+    "rsi_sell": 81
+   },
+   "is_sharpe": 1.6437647760920473,
+   "oos_sharpe": -0.07195638946069456,
+   "oos_return": -0.02746898890313254,
+   "oos_mdd": -0.14609841352850972,
+   "oos_vol": 0.08266127442228853,
+   "oos_trades": 2.0,
+   "bh_sharpe": 0.5304913022222976,
+   "seconds": 15.853833675384521
+  },
+  {
+   "config": "prototype",
+   "seed": 5,
+   "genome": {
+    "short_window": 39,
+    "long_window": 185,
+    "rsi_period": 28,
+    "rsi_buy": 39,
+    "rsi_sell": 77
+   },
+   "is_sharpe": 1.7397882484170775,
+   "oos_sharpe": 0.46891938770678315,
+   "oos_return": 0.0907943004335825,
+   "oos_mdd": -0.1458500364388866,
+   "oos_vol": 0.06715097667519668,
+   "oos_trades": 4.0,
+   "bh_sharpe": 0.5304913022222976,
+   "seconds": 15.75347089767456
+  },
+  {
+   "config": "prototype",
+   "seed": 6,
+   "genome": {
+    "short_window": 9,
+    "long_window": 20,
+    "rsi_period": 19,
+    "rsi_buy": 51,
+    "rsi_sell": 80
+   },
+   "is_sharpe": 1.846608580819663,
+   "oos_sharpe": -0.5650753850900105,
+   "oos_return": -0.21578455470964442,
+   "oos_mdd": -0.23670470738395266,
+   "oos_vol": 0.12984026548166147,
+   "oos_trades": 30.0,
+   "bh_sharpe": 0.5304913022222976,
+   "seconds": 13.60783863067627
+  },
+  {
+   "config": "prototype",
+   "seed": 7,
+   "genome": {
+    "short_window": 27,
+    "long_window": 188,
+    "rsi_period": 18,
+    "rsi_buy": 34,
+    "rsi_sell": 80
+   },
+   "is_sharpe": 1.5984472622396177,
+   "oos_sharpe": -0.07195638946069456,
+   "oos_return": -0.02746898890313254,
+   "oos_mdd": -0.14609841352850972,
+   "oos_vol": 0.08266127442228853,
+   "oos_trades": 2.0,
+   "bh_sharpe": 0.5304913022222976,
+   "seconds": 15.351288080215454
+  },
+  {
+   "config": "prototype",
+   "seed": 8,
+   "genome": {
+    "short_window": 6,
+    "long_window": 20,
+    "rsi_period": 18,
+    "rsi_buy": 49,
+    "rsi_sell": 83
+   },
+   "is_sharpe": 1.9851486674671832,
+   "oos_sharpe": 0.6337343498493027,
+   "oos_return": 0.2703854143589013,
+   "oos_mdd": -0.1486677840607762,
+   "oos_vol": 0.14303622632971824,
+   "oos_trades": 32.0,
+   "bh_sharpe": 0.5304913022222976,
+   "seconds": 12.016588926315308
+  },
+  {
+   "config": "prototype",
+   "seed": 9,
+   "genome": {
+    "short_window": 39,
+    "long_window": 184,
+    "rsi_period": 28,
+    "rsi_buy": 39,
+    "rsi_sell": 77
+   },
+   "is_sharpe": 1.7397882484170775,
+   "oos_sharpe": 0.2715268751039652,
+   "oos_return": 0.050741621187466945,
+   "oos_mdd": -0.14585003643888683,
+   "oos_vol": 0.07046963379383368,
+   "oos_trades": 4.0,
+   "bh_sharpe": 0.5304913022222976,
+   "seconds": 15.7751944065094
+  },
+  {
+   "config": "prototype",
+   "seed": 10,
+   "genome": {
+    "short_window": 29,
+    "long_window": 191,
+    "rsi_period": 20,
+    "rsi_buy": 36,
+    "rsi_sell": 79
+   },
+   "is_sharpe": 1.624286152398317,
+   "oos_sharpe": -0.07484300154204282,
+   "oos_return": -0.028158919587089604,
+   "oos_mdd": -0.1467041864024481,
+   "oos_vol": 0.08266223038575454,
+   "oos_trades": 2.0,
+   "bh_sharpe": 0.5304913022222976,
+   "seconds": 15.20741581916809
+  }
+ ],
+ "D_costs": {
+  "0": {
+   "total_return": 0.1445175241321035,
+   "sharpe": 0.49457583730149696,
+   "max_drawdown": -0.12024252511520239,
+   "annual_volatility": 0.10244320308331205,
+   "n_trades": 3.0,
+   "time_in_market": 0.29906542056074764,
+   "benchmark_total_return": 0.37775653262442455,
+   "benchmark_sharpe": 0.5304913022222976,
+   "benchmark_max_drawdown": -0.3091281921353881,
+   "benchmark_annual_volatility": 0.27356401136579495
+  },
+  "10": {
+   "total_return": 0.14108144987574223,
+   "sharpe": 0.484616508690625,
+   "max_drawdown": -0.12024252511520217,
+   "annual_volatility": 0.10246573580530696,
+   "n_trades": 3.0,
+   "time_in_market": 0.29906542056074764,
+   "benchmark_total_return": 0.37775653262442455,
+   "benchmark_sharpe": 0.5304913022222976,
+   "benchmark_max_drawdown": -0.3091281921353881,
+   "benchmark_annual_volatility": 0.27356401136579495
+  },
+  "25": {
+   "total_return": 0.13594024302965235,
+   "sharpe": 0.4696014107385912,
+   "max_drawdown": -0.12024252511520184,
+   "annual_volatility": 0.10251793830660813,
+   "n_trades": 3.0,
+   "time_in_market": 0.29906542056074764,
+   "benchmark_total_return": 0.37775653262442455,
+   "benchmark_sharpe": 0.5304913022222976,
+   "benchmark_max_drawdown": -0.3091281921353881,
+   "benchmark_annual_volatility": 0.27356401136579495
+  },
+  "50": {
+   "total_return": 0.12740591954361036,
+   "sharpe": 0.44439804326861504,
+   "max_drawdown": -0.12024252511520228,
+   "annual_volatility": 0.1026539262713165,
+   "n_trades": 3.0,
+   "time_in_market": 0.29906542056074764,
+   "benchmark_total_return": 0.37775653262442455,
+   "benchmark_sharpe": 0.5304913022222976,
+   "benchmark_max_drawdown": -0.3091281921353881,
+   "benchmark_annual_volatility": 0.27356401136579495
+  }
+ },
+ "E_rolling": [
+  {
+   "window_start": "2015-01-02",
+   "window_end": "2016-12-30",
+   "strategy_return": 0.12771048613939273,
+   "benchmark_return": 0.1013827706577215,
+   "strategy_sharpe": 0.8725901372747962,
+   "benchmark_sharpe": 0.3178710212608593,
+   "max_drawdown": -0.10145661177863952,
+   "n_trades": 1
+  },
+  {
+   "window_start": "2017-01-03",
+   "window_end": "2019-01-03",
+   "strategy_return": 0.20366622743071305,
+   "benchmark_return": 0.26255376654432117,
+   "strategy_sharpe": 0.6759352645925488,
+   "benchmark_sharpe": 0.5940749274093599,
+   "max_drawdown": -0.1615425451349244,
+   "n_trades": 4
+  },
+  {
+   "window_start": "2019-01-04",
+   "window_end": "2021-01-04",
+   "strategy_return": 0.9662251894474332,
+   "benchmark_return": 2.5744982903978264,
+   "strategy_sharpe": 1.3465699241414841,
+   "benchmark_sharpe": 1.9052005337019027,
+   "max_drawdown": -0.2807220233218167,
+   "n_trades": 5
+  },
+  {
+   "window_start": "2021-01-05",
+   "window_end": "2023-01-04",
+   "strategy_return": -0.0703896077538606,
+   "benchmark_return": -0.023915069578325343,
+   "strategy_sharpe": -0.21124831464227864,
+   "benchmark_sharpe": 0.11479190908901883,
+   "max_drawdown": -0.14906459110508752,
+   "n_trades": 4
+  },
+  {
+   "window_start": "2023-01-05",
+   "window_end": "2025-01-07",
+   "strategy_return": 0.1386190852068172,
+   "benchmark_return": 0.9577433993860558,
+   "strategy_sharpe": 0.7108605669546627,
+   "benchmark_sharpe": 1.6785546417992674,
+   "max_drawdown": -0.07367719889286017,
+   "n_trades": 3
+  }
+ ],
+ "F_forward": {
+  "post_snapshot": {
+   "start": "2024-12-02",
+   "end": "2026-09-11",
+   "days": 445,
+   "total_return": 0.1424677390323532,
+   "sharpe": 0.484449307789304,
+   "max_drawdown": -0.1892182320717668,
+   "annual_volatility": 0.19517899548406822,
+   "benchmark_total_return": 0.4101937241084941,
+   "benchmark_sharpe": 0.798857329703504,
+   "benchmark_max_drawdown": -0.33360509777882974,
+   "benchmark_annual_volatility": 0.2993607699566068
+  },
+  "full_oos_to_2026": {
+   "start": "2021-12-08",
+   "end": "2026-09-11",
+   "days": 1194,
+   "total_return": 0.21065774377088142,
+   "sharpe": 0.32258428084994045,
+   "max_drawdown": -0.22567958057175108,
+   "annual_volatility": 0.16991472900338933,
+   "benchmark_total_return": 0.9871689727941584,
+   "benchmark_sharpe": 0.6524098895651296,
+   "benchmark_max_drawdown": -0.3336050977788293,
+   "benchmark_annual_volatility": 0.2835241733207546
+  }
+ },
+ "G_cross_ticker": [
+  {
+   "ticker": "ADBE",
+   "genome": {
+    "short_window": 55,
+    "long_window": 132,
+    "rsi_period": 5,
+    "rsi_buy": 12,
+    "rsi_sell": 55
+   },
+   "rule": "Buy when the 55-day average price rises above the 132-day average and the 5-day RSI is below 12; sell when the 55-day average falls below the 132-day average or the RSI rises above 55.",
+   "days": 2940,
+   "source": "cache",
+   "train": {
+    "total_return": 0.5781981231341686,
+    "sharpe": 0.9687451291838984,
+    "max_drawdown": -0.043637243634925826,
+    "annual_volatility": 0.05945948833589494,
+    "n_trades": 18.0,
+    "time_in_market": 0.02478134110787172,
+    "benchmark_total_return": 3.7663810512576603,
+    "benchmark_sharpe": 0.7465120629754531,
+    "benchmark_max_drawdown": -0.6002149800846832,
+    "benchmark_annual_volatility": 0.3291197199364234
+   },
+   "test": {
+    "total_return": 0.051438691809857495,
+    "sharpe": 0.6281499009155127,
+    "max_drawdown": -0.015450994587333011,
+    "annual_volatility": 0.023239937129140856,
+    "n_trades": 2.0,
+    "time_in_market": 0.009070294784580499,
+    "benchmark_total_return": -0.27067430488547006,
+    "benchmark_sharpe": -0.07202961094651882,
+    "benchmark_max_drawdown": -0.6953021603652645,
+    "benchmark_annual_volatility": 0.35715026429260965
+   },
+   "train_range": [
+    "2015-01-02",
+    "2023-03-07"
+   ],
+   "test_range": [
+    "2023-03-08",
+    "2026-09-11"
+   ]
+  },
+  {
+   "ticker": "AMAT",
+   "genome": {
+    "short_window": 59,
+    "long_window": 159,
+    "rsi_period": 10,
+    "rsi_buy": 51,
+    "rsi_sell": 61
+   },
+   "rule": "Buy when the 59-day average price rises above the 159-day average and the 10-day RSI is below 51; sell when the 59-day average falls below the 159-day average or the RSI rises above 61.",
+   "days": 2940,
+   "source": "cache",
+   "train": {
+    "total_return": 6.283197656510943,
+    "sharpe": 1.023540121284433,
+    "max_drawdown": -0.37929574864435267,
+    "annual_volatility": 0.274736990249346,
+    "n_trades": 108.0,
+    "time_in_market": 0.3226433430515063,
+    "benchmark_total_return": 4.216702374933168,
+    "benchmark_sharpe": 0.7014487079414043,
+    "benchmark_max_drawdown": -0.5513918644819376,
+    "benchmark_annual_volatility": 0.4070435284578983
+   },
+   "test": {
+    "total_return": 0.6824443277187202,
+    "sharpe": 0.6860859298835426,
+    "max_drawdown": -0.27783181692150705,
+    "annual_volatility": 0.2697096819674038,
+    "n_trades": 35.0,
+    "time_in_market": 0.29024943310657597,
+    "benchmark_total_return": 2.9573393751493193,
+    "benchmark_sharpe": 1.0730189621697979,
+    "benchmark_max_drawdown": -0.49881923583465226,
+    "benchmark_annual_volatility": 0.4687012161344463
+   },
+   "train_range": [
+    "2015-01-02",
+    "2023-03-07"
+   ],
+   "test_range": [
+    "2023-03-08",
+    "2026-09-11"
+   ]
+  },
+  {
+   "ticker": "AMD",
+   "genome": {
+    "short_window": 59,
+    "long_window": 159,
+    "rsi_period": 10,
+    "rsi_buy": 51,
+    "rsi_sell": 61
+   },
+   "rule": "Buy when the 59-day average price rises above the 159-day average and the 10-day RSI is below 51; sell when the 59-day average falls below the 159-day average or the RSI rises above 61.",
+   "days": 2940,
+   "source": "cache",
+   "train": {
+    "total_return": 6.145645687691127,
+    "sharpe": 0.7888831913226453,
+    "max_drawdown": -0.4205386756855012,
+    "annual_volatility": 0.40368815513054934,
+    "n_trades": 84.0,
+    "time_in_market": 0.33867832847424684,
+    "benchmark_total_return": 29.752808338613548,
+    "benchmark_sharpe": 0.9856486865664151,
+    "benchmark_max_drawdown": -0.6544994295506881,
+    "benchmark_annual_volatility": 0.6096692210947814
+   },
+   "test": {
+    "total_return": 0.24254273755100764,
+    "sharpe": 0.3574838875783212,
+    "max_drawdown": -0.2765834538523353,
+    "annual_volatility": 0.2987017238766496,
+    "n_trades": 26.0,
+    "time_in_market": 0.2800453514739229,
+    "benchmark_total_return": 5.045800495226947,
+    "benchmark_sharpe": 1.1851934654429108,
+    "benchmark_max_drawdown": -0.630002851367935,
+    "benchmark_annual_volatility": 0.5678642437231114
+   },
+   "train_range": [
+    "2015-01-02",
+    "2023-03-07"
+   ],
+   "test_range": [
+    "2023-03-08",
+    "2026-09-11"
+   ]
+  },
+  {
+   "ticker": "DELL",
+   "genome": {
+    "short_window": 59,
+    "long_window": 159,
+    "rsi_period": 10,
+    "rsi_buy": 51,
+    "rsi_sell": 61
+   },
+   "rule": "Buy when the 59-day average price rises above the 159-day average and the 10-day RSI is below 51; sell when the 59-day average falls below the 159-day average or the RSI rises above 61.",
+   "days": 2531,
+   "source": "cache",
+   "train": {
+    "total_return": 0.8079078165479581,
+    "sharpe": 0.5240975082837221,
+    "max_drawdown": -0.32559253274292377,
+    "annual_volatility": 0.20012621526870572,
+    "n_trades": 82.0,
+    "time_in_market": 0.27442123094297005,
+    "benchmark_total_return": 3.8414658780752564,
+    "benchmark_sharpe": 0.8143789619260158,
+    "benchmark_max_drawdown": -0.586389797204198,
+    "benchmark_annual_volatility": 0.3529455810014844
+   },
+   "test": {
+    "total_return": 0.04935619927916046,
+    "sharpe": 0.1997349161517202,
+    "max_drawdown": -0.4575148558388481,
+    "annual_volatility": 0.29143861022006223,
+    "n_trades": 24.0,
+    "time_in_market": 0.29736842105263156,
+    "benchmark_total_return": 9.584097725907013,
+    "benchmark_sharpe": 1.552430339302371,
+    "benchmark_max_drawdown": -0.5958774382535522,
+    "benchmark_annual_volatility": 0.6258727478803375
+   },
+   "train_range": [
+    "2016-08-17",
+    "2023-08-30"
+   ],
+   "test_range": [
+    "2023-08-31",
+    "2026-09-11"
+   ]
+  },
+  {
+   "ticker": "GLW",
+   "genome": {
+    "short_window": 59,
+    "long_window": 159,
+    "rsi_period": 10,
+    "rsi_buy": 51,
+    "rsi_sell": 61
+   },
+   "rule": "Buy when the 59-day average price rises above the 159-day average and the 10-day RSI is below 51; sell when the 59-day average falls below the 159-day average or the RSI rises above 61.",
+   "days": 2940,
+   "source": "cache",
+   "train": {
+    "total_return": 0.6814910890474555,
+    "sharpe": 0.5217375606262404,
+    "max_drawdown": -0.3118563345973149,
+    "annual_volatility": 0.1410917363337212,
+    "n_trades": 71.0,
+    "time_in_market": 0.2789115646258503,
+    "benchmark_total_return": 0.8565704906811391,
+    "benchmark_sharpe": 0.40194168765014854,
+    "benchmark_max_drawdown": -0.4880220003413228,
+    "benchmark_annual_volatility": 0.30194704858265675
+   },
+   "test": {
+    "total_return": 1.2049384600553616,
+    "sharpe": 0.8894045458311078,
+    "max_drawdown": -0.37089910573144236,
+    "annual_volatility": 0.3063375763296738,
+    "n_trades": 36.0,
+    "time_in_market": 0.31519274376417233,
+    "benchmark_total_return": 4.244419410385803,
+    "benchmark_sharpe": 1.281355188110925,
+    "benchmark_max_drawdown": -0.5148421808116348,
+    "benchmark_annual_volatility": 0.44719411734325343
+   },
+   "train_range": [
+    "2015-01-02",
+    "2023-03-07"
+   ],
+   "test_range": [
+    "2023-03-08",
+    "2026-09-11"
+   ]
+  },
+  {
+   "ticker": "INTC",
+   "genome": {
+    "short_window": 59,
+    "long_window": 159,
+    "rsi_period": 10,
+    "rsi_buy": 51,
+    "rsi_sell": 61
+   },
+   "rule": "Buy when the 59-day average price rises above the 159-day average and the 10-day RSI is below 51; sell when the 59-day average falls below the 159-day average or the RSI rises above 61.",
+   "days": 2940,
+   "source": "cache",
+   "train": {
+    "total_return": 0.3526357552541186,
+    "sharpe": 0.28741959068879236,
+    "max_drawdown": -0.41082824939035434,
+    "annual_volatility": 0.194845902736603,
+    "n_trades": 72.0,
+    "time_in_market": 0.26773566569484936,
+    "benchmark_total_return": -0.10676919702481391,
+    "benchmark_sharpe": 0.12336685210640568,
+    "benchmark_max_drawdown": -0.6162617137578512,
+    "benchmark_annual_volatility": 0.3288272719218675
+   },
+   "test": {
+    "total_return": 0.1225216580128623,
+    "sharpe": 0.2635090069994857,
+    "max_drawdown": -0.4633521994817571,
+    "annual_volatility": 0.3329863394735047,
+    "n_trades": 30.0,
+    "time_in_market": 0.29138321995464855,
+    "benchmark_total_return": 3.0595980088263754,
+    "benchmark_sharpe": 0.9602083840513557,
+    "benchmark_max_drawdown": -0.638045460773113,
+    "benchmark_annual_volatility": 0.6077519376181645
+   },
+   "train_range": [
+    "2015-01-02",
+    "2023-03-07"
+   ],
+   "test_range": [
+    "2023-03-08",
+    "2026-09-11"
+   ]
+  },
+  {
+   "ticker": "MRNA",
+   "genome": {
+    "short_window": 59,
+    "long_window": 159,
+    "rsi_period": 10,
+    "rsi_buy": 51,
+    "rsi_sell": 61
+   },
+   "rule": "Buy when the 59-day average price rises above the 159-day average and the 10-day RSI is below 51; sell when the 59-day average falls below the 159-day average or the RSI rises above 61.",
+   "days": 1950,
+   "source": "cache",
+   "train": {
+    "total_return": 2.712010112929521,
+    "sharpe": 0.7962792216592949,
+    "max_drawdown": -0.4487962691967349,
+    "annual_volatility": 0.403106920863779,
+    "n_trades": 44.0,
+    "time_in_market": 0.2805860805860806,
+    "benchmark_total_return": 5.306988986702585,
+    "benchmark_sharpe": 0.8235726688578611,
+    "benchmark_max_drawdown": -0.8565236197058884,
+    "benchmark_annual_volatility": 0.736487415962073
+   },
+   "test": {
+    "total_return": 0.26586713368042547,
+    "sharpe": 0.5680659829763979,
+    "max_drawdown": -0.21118919781406909,
+    "annual_volatility": 0.22092002490932044,
+    "n_trades": 12.0,
+    "time_in_market": 0.13846153846153847,
+    "benchmark_total_return": 0.1456195059950336,
+    "benchmark_sharpe": 0.46477792242217425,
+    "benchmark_max_drawdown": -0.8657943669141165,
+    "benchmark_annual_volatility": 1.358658030339298
+   },
+   "train_range": [
+    "2018-12-07",
+    "2024-05-10"
+   ],
+   "test_range": [
+    "2024-05-13",
+    "2026-09-11"
+   ]
+  },
+  {
+   "ticker": "MRVL",
+   "genome": {
+    "short_window": 59,
+    "long_window": 159,
+    "rsi_period": 10,
+    "rsi_buy": 51,
+    "rsi_sell": 61
+   },
+   "rule": "Buy when the 59-day average price rises above the 159-day average and the 10-day RSI is below 51; sell when the 59-day average falls below the 159-day average or the RSI rises above 61.",
+   "days": 2940,
+   "source": "cache",
+   "train": {
+    "total_return": 3.015228221738526,
+    "sharpe": 0.7770269027082731,
+    "max_drawdown": -0.3415222563582986,
+    "annual_volatility": 0.26345179982519235,
+    "n_trades": 94.0,
+    "time_in_market": 0.30612244897959184,
+    "benchmark_total_return": 2.113603215000135,
+    "benchmark_sharpe": 0.5369561191091685,
+    "benchmark_max_drawdown": -0.6187945774960893,
+    "benchmark_annual_volatility": 0.43433329202057347
+   },
+   "test": {
+    "total_return": 0.07123463323112489,
+    "sharpe": 0.24758283692658473,
+    "max_drawdown": -0.6408830579134652,
+    "annual_volatility": 0.39779502998244526,
+    "n_trades": 29.0,
+    "time_in_market": 0.35034013605442177,
+    "benchmark_total_return": 4.536335460842161,
+    "benchmark_sharpe": 1.0592251200160265,
+    "benchmark_max_drawdown": -0.6078851087160102,
+    "benchmark_annual_volatility": 0.6693559524925261
+   },
+   "train_range": [
+    "2015-01-02",
+    "2023-03-07"
+   ],
+   "test_range": [
+    "2023-03-08",
+    "2026-09-11"
+   ]
+  },
+  {
+   "ticker": "MU",
+   "genome": {
+    "short_window": 59,
+    "long_window": 159,
+    "rsi_period": 10,
+    "rsi_buy": 51,
+    "rsi_sell": 61
+   },
+   "rule": "Buy when the 59-day average price rises above the 159-day average and the 10-day RSI is below 51; sell when the 59-day average falls below the 159-day average or the RSI rises above 61.",
+   "days": 2940,
+   "source": "cache",
+   "train": {
+    "total_return": 0.7477887094974889,
+    "sharpe": 0.3896009194872168,
+    "max_drawdown": -0.5397934133619822,
+    "annual_volatility": 0.26892703197806517,
+    "n_trades": 67.0,
+    "time_in_market": 0.27988338192419826,
+    "benchmark_total_return": 0.6151838952914264,
+    "benchmark_sharpe": 0.36061996857485507,
+    "benchmark_max_drawdown": -0.7248921171714524,
+    "benchmark_annual_volatility": 0.47029146158885066
+   },
+   "test": {
+    "total_return": 1.5060844628070758,
+    "sharpe": 0.9388472334030658,
+    "max_drawdown": -0.4111184719685538,
+    "annual_volatility": 0.3402350150200548,
+    "n_trades": 36.0,
+    "time_in_market": 0.2687074829931973,
+    "benchmark_total_return": 16.40220258970677,
+    "benchmark_sharpe": 1.641739432388327,
+    "benchmark_max_drawdown": -0.5762897330623249,
+    "benchmark_annual_volatility": 0.6102638213478083
+   },
+   "train_range": [
+    "2015-01-02",
+    "2023-03-07"
+   ],
+   "test_range": [
+    "2023-03-08",
+    "2026-09-11"
+   ]
+  },
+  {
+   "ticker": "PODD",
+   "genome": {
+    "short_window": 55,
+    "long_window": 123,
+    "rsi_period": 30,
+    "rsi_buy": 42,
+    "rsi_sell": 66
+   },
+   "rule": "Buy when the 55-day average price rises above the 123-day average and the 30-day RSI is below 42; sell when the 55-day average falls below the 123-day average or the RSI rises above 66.",
+   "days": 2940,
+   "source": "cache",
+   "train": {
+    "total_return": 4.598942149647952,
+    "sharpe": 1.1155390156589287,
+    "max_drawdown": -0.21681877299138652,
+    "annual_volatility": 0.2081808586787499,
+    "n_trades": 22.0,
+    "time_in_market": 0.16132167152575316,
+    "benchmark_total_return": 5.341743848568487,
+    "benchmark_sharpe": 0.7351475794446796,
+    "benchmark_max_drawdown": -0.4537405901179582,
+    "benchmark_annual_volatility": 0.4354279579143377
+   },
+   "test": {
+    "total_return": 0.07623949661507101,
+    "sharpe": 0.23677514722009754,
+    "max_drawdown": -0.12943365973836896,
+    "annual_volatility": 0.11782295907346908,
+    "n_trades": 6.0,
+    "time_in_market": 0.08276643990929705,
+    "benchmark_total_return": -0.5388754917636032,
+    "benchmark_sharpe": -0.32735486523773066,
+    "benchmark_max_drawdown": -0.6259849102247639,
+    "benchmark_annual_volatility": 0.4135128644731241
+   },
+   "train_range": [
+    "2015-01-02",
+    "2023-03-07"
+   ],
+   "test_range": [
+    "2023-03-08",
+    "2026-09-11"
+   ]
+  },
+  {
+   "ticker": "SNDK",
+   "genome": {
+    "short_window": 59,
+    "long_window": 159,
+    "rsi_period": 10,
+    "rsi_buy": 51,
+    "rsi_sell": 61
+   },
+   "rule": "Buy when the 59-day average price rises above the 159-day average and the 10-day RSI is below 51; sell when the 59-day average falls below the 159-day average or the RSI rises above 61.",
+   "days": 396,
+   "source": "cache",
+   "train": {
+    "total_return": 0.5491659471542867,
+    "sharpe": 1.3470583605212738,
+    "max_drawdown": -0.16447996934221876,
+    "annual_volatility": 0.33752921112687223,
+    "n_trades": 4.0,
+    "time_in_market": 0.11191335740072202,
+    "benchmark_total_return": 18.513610839843725,
+    "benchmark_sharpe": 3.2092847235481425,
+    "benchmark_max_drawdown": -0.47500883019282303,
+    "benchmark_annual_volatility": 0.9991052251822252
+   },
+   "test": {
+    "total_return": 0.0,
+    "sharpe": 0.0,
+    "max_drawdown": 0.0,
+    "annual_volatility": 0.0,
+    "n_trades": 0.0,
+    "time_in_market": 0.0,
+    "benchmark_total_return": 1.3251196062498987,
+    "benchmark_sharpe": 2.082458515657162,
+    "benchmark_max_drawdown": -0.564929329915016,
+    "benchmark_annual_volatility": 1.1940190741798689
+   },
+   "train_range": [
+    "2025-02-13",
+    "2026-03-23"
+   ],
+   "test_range": [
+    "2026-03-24",
+    "2026-09-11"
+   ]
+  },
+  {
+   "ticker": "STX",
+   "genome": {
+    "short_window": 59,
+    "long_window": 159,
+    "rsi_period": 10,
+    "rsi_buy": 51,
+    "rsi_sell": 61
+   },
+   "rule": "Buy when the 59-day average price rises above the 159-day average and the 10-day RSI is below 51; sell when the 59-day average falls below the 159-day average or the RSI rises above 61.",
+   "days": 2940,
+   "source": "cache",
+   "train": {
+    "total_return": 0.3332219854499483,
+    "sharpe": 0.27281295171410763,
+    "max_drawdown": -0.3427464808091508,
+    "annual_volatility": 0.21072022843506577,
+    "n_trades": 62.0,
+    "time_in_market": 0.2818270165208941,
+    "benchmark_total_return": 0.43317966394501695,
+    "benchmark_sharpe": 0.3147251753634395,
+    "benchmark_max_drawdown": -0.6897790713933383,
+    "benchmark_annual_volatility": 0.4097693189253687
+   },
+   "test": {
+    "total_return": 3.1988337053928495,
+    "sharpe": 1.4692055709071237,
+    "max_drawdown": -0.2302871695412696,
+    "annual_volatility": 0.3115046784005123,
+    "n_trades": 48.0,
+    "time_in_market": 0.31405895691609975,
+    "benchmark_total_return": 13.302286653670727,
+    "benchmark_sharpe": 1.7573221879891965,
+    "benchmark_max_drawdown": -0.40000637340230016,
+    "benchmark_annual_volatility": 0.5052050655063641
+   },
+   "train_range": [
+    "2015-01-02",
+    "2023-03-07"
+   ],
+   "test_range": [
+    "2023-03-08",
+    "2026-09-11"
+   ]
+  },
+  {
+   "ticker": "WBD",
+   "genome": {
+    "short_window": 15,
+    "long_window": 36,
+    "rsi_period": 16,
+    "rsi_buy": 40,
+    "rsi_sell": 65
+   },
+   "rule": "Buy when the 15-day average price rises above the 36-day average and the 16-day RSI is below 40; sell when the 15-day average falls below the 36-day average or the RSI rises above 65.",
+   "days": 2940,
+   "source": "cache",
+   "train": {
+    "total_return": 0.9095173757056805,
+    "sharpe": 0.8890960921975389,
+    "max_drawdown": -0.08862183214330144,
+    "annual_volatility": 0.0939384564970535,
+    "n_trades": 40.0,
+    "time_in_market": 0.047619047619047616,
+    "benchmark_total_return": -0.5701856179936862,
+    "benchmark_sharpe": -0.022576169819487745,
+    "benchmark_max_drawdown": -0.8852077097074003,
+    "benchmark_annual_volatility": 0.4296961269847822
+   },
+   "test": {
+    "total_return": 0.12035549527487466,
+    "sharpe": 0.5162103463413883,
+    "max_drawdown": -0.04551922647383544,
+    "annual_volatility": 0.06717204321674174,
+    "n_trades": 6.0,
+    "time_in_market": 0.018140589569160998,
+    "benchmark_total_return": 0.8279009541467977,
+    "benchmark_sharpe": 0.5904740909188863,
+    "benchmark_max_drawdown": -0.5642857010156632,
+    "benchmark_annual_volatility": 0.4988620737746143
+   },
+   "train_range": [
+    "2015-01-02",
+    "2023-03-07"
+   ],
+   "test_range": [
+    "2023-03-08",
+    "2026-09-11"
+   ]
+  },
+  {
+   "ticker": "WDC",
+   "genome": {
+    "short_window": 59,
+    "long_window": 159,
+    "rsi_period": 10,
+    "rsi_buy": 51,
+    "rsi_sell": 61
+   },
+   "rule": "Buy when the 59-day average price rises above the 159-day average and the 10-day RSI is below 51; sell when the 59-day average falls below the 159-day average or the RSI rises above 61.",
+   "days": 2940,
+   "source": "cache",
+   "train": {
+    "total_return": 0.8096495341864023,
+    "sharpe": 0.4178380664139706,
+    "max_drawdown": -0.5650928205971493,
+    "annual_volatility": 0.24836202177760058,
+    "n_trades": 56.0,
+    "time_in_market": 0.22351797862001943,
+    "benchmark_total_return": -0.5977607376018114,
+    "benchmark_sharpe": -0.00589186483488676,
+    "benchmark_max_drawdown": -0.7049292497418668,
+    "benchmark_annual_volatility": 0.4641112210788203
+   },
+   "test": {
+    "total_return": 1.3408810861267413,
+    "sharpe": 0.8953645740079857,
+    "max_drawdown": -0.33377314267383806,
+    "annual_volatility": 0.33268731966455295,
+    "n_trades": 31.0,
+    "time_in_market": 0.22448979591836735,
+    "benchmark_total_return": 14.68650527986082,
+    "benchmark_sharpe": 1.6951257887892406,
+    "benchmark_max_drawdown": -0.49645539432213326,
+    "benchmark_annual_volatility": 0.5550762033982607
+   },
+   "train_range": [
+    "2015-01-02",
+    "2023-03-07"
+   ],
+   "test_range": [
+    "2023-03-08",
+    "2026-09-11"
+   ]
+  }
+ ],
+ "H_transfer": [
+  {
+   "ticker": "SPY",
+   "total_return": 0.25136360675290703,
+   "sharpe": 0.9609519516541047,
+   "max_drawdown": -0.1005930978099483,
+   "annual_volatility": 0.08201754947125095,
+   "n_trades": 5.0,
+   "time_in_market": 0.4259012016021362,
+   "benchmark_total_return": 0.3411531933070491,
+   "benchmark_sharpe": 0.6512069699892189,
+   "benchmark_max_drawdown": -0.24496380282076557,
+   "benchmark_annual_volatility": 0.17525413425599182,
+   "test_range": [
+    "2021-12-08",
+    "2024-11-29"
+   ]
+  },
+  {
+   "ticker": "AMD",
+   "total_return": -0.037494679448565216,
+   "sharpe": 0.07165077858957111,
+   "max_drawdown": -0.3750547757724658,
+   "annual_volatility": 0.24608881915111777,
+   "n_trades": 6.0,
+   "time_in_market": 0.2817089452603471,
+   "benchmark_total_return": -0.05549444032320783,
+   "benchmark_sharpe": 0.22794169352796428,
+   "benchmark_max_drawdown": -0.6376004249448184,
+   "benchmark_annual_volatility": 0.5292636530733451,
+   "test_range": [
+    "2021-12-08",
+    "2024-11-29"
+   ]
+  },
+  {
+   "ticker": "INTC",
+   "total_return": 0.08234248342221018,
+   "sharpe": 0.23752934695783093,
+   "max_drawdown": -0.2657262623649401,
+   "annual_volatility": 0.1844704319116189,
+   "n_trades": 6.0,
+   "time_in_market": 0.21895861148197596,
+   "benchmark_total_return": -0.49892051811951277,
+   "benchmark_sharpe": -0.3230739554020016,
+   "benchmark_max_drawdown": -0.6357124639245446,
+   "benchmark_annual_volatility": 0.42809305331937275,
+   "test_range": [
+    "2021-12-08",
+    "2024-11-29"
+   ]
+  },
+  {
+   "ticker": "MU",
+   "total_return": 0.38275709160660853,
+   "sharpe": 0.529208404801406,
+   "max_drawdown": -0.49160481521275967,
+   "annual_volatility": 0.27871566842306256,
+   "n_trades": 8.0,
+   "time_in_market": 0.46194926568758343,
+   "benchmark_total_return": 0.16010831746346543,
+   "benchmark_sharpe": 0.3333490925767145,
+   "benchmark_max_drawdown": -0.496275343452637,
+   "benchmark_annual_volatility": 0.4473990370856824,
+   "test_range": [
+    "2021-12-08",
+    "2024-11-29"
+   ]
+  },
+  {
+   "ticker": "STX",
+   "total_return": 0.7487332433710616,
+   "sharpe": 0.9711346133801247,
+   "max_drawdown": -0.15913460736699392,
+   "annual_volatility": 0.21828709277678848,
+   "n_trades": 1.0,
+   "time_in_market": 0.4712950600801068,
+   "benchmark_total_return": 0.07219102006052958,
+   "benchmark_sharpe": 0.24706183564024273,
+   "benchmark_max_drawdown": -0.5699183653760531,
+   "benchmark_annual_volatility": 0.36510850504591974,
+   "test_range": [
+    "2021-12-08",
+    "2024-11-29"
+   ]
+  },
+  {
+   "ticker": "GLW",
+   "total_return": 0.4548647283150604,
+   "sharpe": 0.9506387708808112,
+   "max_drawdown": -0.18268391437616893,
+   "annual_volatility": 0.14331792452586772,
+   "n_trades": 7.0,
+   "time_in_market": 0.2590120160213618,
+   "benchmark_total_return": 0.3962573989190421,
+   "benchmark_sharpe": 0.546555484827021,
+   "benchmark_max_drawdown": -0.34522959814423526,
+   "benchmark_annual_volatility": 0.27298712618569254,
+   "test_range": [
+    "2021-12-08",
+    "2024-11-29"
+   ]
+  },
+  {
+   "ticker": "WBD",
+   "total_return": -0.054814170881515856,
+   "sharpe": -0.1390825419629856,
+   "max_drawdown": -0.1921664651476882,
+   "annual_volatility": 0.10026661009562504,
+   "n_trades": 10.0,
+   "time_in_market": 0.0520694259012016,
+   "benchmark_total_return": -0.5638785167384331,
+   "benchmark_sharpe": -0.22809074463848097,
+   "benchmark_max_drawdown": -0.7847979482850385,
+   "benchmark_annual_volatility": 0.5519953603378652,
+   "test_range": [
+    "2021-12-08",
+    "2024-11-29"
+   ]
+  },
+  {
+   "ticker": "WDC",
+   "total_return": 0.5230130775697179,
+   "sharpe": 0.6921759913345288,
+   "max_drawdown": -0.3170014755900409,
+   "annual_volatility": 0.24948902261754016,
+   "n_trades": 4.0,
+   "time_in_market": 0.4499332443257677,
+   "benchmark_total_return": 0.23711864201352517,
+   "benchmark_sharpe": 0.37913993912811483,
+   "benchmark_max_drawdown": -0.5532386363678974,
+   "benchmark_annual_volatility": 0.41822002044366596,
+   "test_range": [
+    "2021-12-08",
+    "2024-11-29"
+   ]
+  },
+  {
+   "ticker": "AMAT",
+   "total_return": 0.5324925070746371,
+   "sharpe": 0.6836702392402327,
+   "max_drawdown": -0.32621999039844174,
+   "annual_volatility": 0.2593426124771976,
+   "n_trades": 6.0,
+   "time_in_market": 0.4712950600801068,
+   "benchmark_total_return": 0.14027591787391147,
+   "benchmark_sharpe": 0.31833399774429855,
+   "benchmark_max_drawdown": -0.5513918644819374,
+   "benchmark_annual_volatility": 0.4310942385423321,
+   "test_range": [
+    "2021-12-08",
+    "2024-11-29"
+   ]
+  },
+  {
+   "ticker": "ADBE",
+   "total_return": -0.04868676650331849,
+   "sharpe": -0.03632585538462768,
+   "max_drawdown": -0.2282719127908941,
+   "annual_volatility": 0.14860126837939694,
+   "n_trades": 6.0,
+   "time_in_market": 0.17089452603471295,
+   "benchmark_total_return": -0.2100290737066579,
+   "benchmark_sharpe": -0.014439937510257673,
+   "benchmark_max_drawdown": -0.5819534903385413,
+   "benchmark_annual_volatility": 0.38188270847894196,
+   "test_range": [
+    "2021-12-08",
+    "2024-11-29"
+   ]
+  },
+  {
+   "ticker": "MRVL",
+   "total_return": 0.3236354413071585,
+   "sharpe": 0.4748536561669271,
+   "max_drawdown": -0.30321067700836524,
+   "annual_volatility": 0.28421582912573456,
+   "n_trades": 5.0,
+   "time_in_market": 0.3951935914552737,
+   "benchmark_total_return": 0.02866095730516771,
+   "benchmark_sharpe": 0.2922265051973895,
+   "benchmark_max_drawdown": -0.6178758762932546,
+   "benchmark_annual_volatility": 0.5623932783925383,
+   "test_range": [
+    "2021-12-08",
+    "2024-11-29"
+   ]
+  },
+  {
+   "ticker": "PODD",
+   "total_return": 0.31860718289921297,
+   "sharpe": 0.6697968153265531,
+   "max_drawdown": -0.24276966179680948,
+   "annual_volatility": 0.1571518801092468,
+   "n_trades": 7.0,
+   "time_in_market": 0.2523364485981308,
+   "benchmark_total_return": -0.03734711478784736,
+   "benchmark_sharpe": 0.19609497455958824,
+   "benchmark_max_drawdown": -0.6130878709011207,
+   "benchmark_annual_volatility": 0.4567670356132551,
+   "test_range": [
+    "2021-12-08",
+    "2024-11-29"
+   ]
+  }
+ ]
+}
