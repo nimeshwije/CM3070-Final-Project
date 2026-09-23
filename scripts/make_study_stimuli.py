@@ -69,7 +69,9 @@ def main() -> int:
 
     lines = ["# Advisor explanations - participant sheet", "",
              "You will read six short messages from an automated investment advisor. Each message is about the same company's shares, on a particular day. "
-             "For each message, answer the four questions on your response sheet. There are no right or wrong opinions; we are testing the advisor's writing, not you.", ""]
+             "Each message starts with a line saying whether you currently hold these shares. This is a pretend scenario: for that message, imagine you are that person. "
+             "Your own real investments are not relevant and will not be asked about. For each message, answer the four questions on your response sheet. "
+             "There are no right or wrong opinions; we are testing the advisor's writing, not you.", ""]
     for i, (action, path) in enumerate(ORDER, 1):
         key = f"{action}_{path}"
         if key not in stimuli:
