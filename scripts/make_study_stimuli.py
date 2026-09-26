@@ -1,16 +1,18 @@
 #!/usr/bin/env python3
-"""Generate the six explanations used in the comprehension study (report §5.3).
+"""Generate the six explanations for my comprehension study (report §5.3).
 
-Three actions (BUY / SELL / HOLD) x two explanation paths (LLM / template),
-all produced by the real system from the deployed AAPL rule on fixed dates,
-so every participant sees exactly the same stimuli.
+Three actions (BUY / SELL / HOLD) times two explanation paths (LLM /
+template), all produced by the real system from the deployed AAPL rule on
+fixed dates -- so every participant reads exactly the same six texts, and I
+can honestly say the stimuli weren't hand-written or cherry-picked.
 
     python scripts/make_study_stimuli.py            # LLM stimuli need Ollama running
     python scripts/make_study_stimuli.py --no-llm   # template stimuli only
 
-Writes reports/study_stimuli.json and reports/Participant_Sheet.md.
-The participant sheet shuffles the six stimuli into a fixed order (S1..S6)
-and never reveals which path produced each one.
+Writes reports/study_stimuli.json and reports/Participant_Sheet.md. The
+participant sheet puts the six stimuli in a fixed order (S1..S6) and never
+reveals which path produced which -- participants shouldn't know whether
+they are reading the LLM or the template.
 """
 from __future__ import annotations
 
@@ -26,13 +28,14 @@ from advisor.explain import explain
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-# (as-of date, user holds?) chosen so the deployed rule yields each action.
+# (as-of date, user holds?) tuples, picked so the deployed rule genuinely
+# produces each of the three actions on those dates.
 CASES = [
     ("BUY",  "2026-07-17", False),   # rule in market, user not holding
     ("SELL", "2025-11-06", True),    # rule in cash, user still holding
     ("HOLD", "2026-07-17", True),    # rule in market, user holding -> keep
 ]
-# Fixed presentation order (path hidden from participants).
+# The fixed presentation order. Which path made each message stays hidden.
 ORDER = [("HOLD", "template"), ("BUY", "llm"), ("SELL", "template"),
          ("HOLD", "llm"), ("BUY", "template"), ("SELL", "llm")]
 

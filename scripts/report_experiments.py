@@ -1,8 +1,10 @@
 #!/usr/bin/env python3
-"""All quantitative experiments reported in the final report, in one run.
+"""Every quantitative experiment in my final report, runnable in one go.
 
-Writes reports/final_experiments.json.  Everything is reproducible from the
-cached price snapshot in data_cache/ and the fixed seeds below.
+Writes reports/final_experiments.json. I wanted the whole results chapter to
+be reproducible from a single script, so everything here is driven by the
+cached price snapshot in data_cache/ and the fixed seeds below -- rerunning
+this file regenerates every number in the report.
 
 Experiments
 -----------
@@ -42,7 +44,7 @@ HARDENED = dict(n_folds=4, consistency_lambda=0.5, min_trades_per_year=2.0, spar
 PROTOTYPE = dict(n_folds=1, consistency_lambda=0.0, min_trades_per_year=0.0, sparsity_penalty=0.0, cost=0.0)
 
 
-def m2(m):  # compact metrics
+def m2(m):  # trim a metrics dict down to the keys the report actually uses
     keys = ["total_return", "sharpe", "max_drawdown", "annual_volatility", "n_trades", "time_in_market",
             "benchmark_total_return", "benchmark_sharpe", "benchmark_max_drawdown", "benchmark_annual_volatility"]
     return {k: (None if m.get(k) is None else float(m[k])) for k in keys if k in m}
@@ -109,8 +111,10 @@ out["E_rolling"] = wf.to_dict(orient="records")
 # ---- F forward test ----------------------------------------------------------
 fwd = aapl_full[aapl_full.index > pd.Timestamp(SNAP_END)]
 oos_all = aapl_full[aapl_full.index >= pd.Timestamp(out["A_champion"]["test_range"][0])]
-# warm-up: indicators need history, so backtest on a window that includes the long
-# window of prior prices, then score only the forward part.
+# Indicator warm-up matters here: I backtest on a window that includes the
+# long moving-average window of *prior* prices, then only score the forward
+# part -- otherwise the first ~long_window days of the forward test would be
+# spent flat for no reason other than cold indicators.
 def scored_window(full, start_ts, genome, cost=0.001):
     warm = genome.long_window + 5
     idx = full.index.get_indexer([start_ts], method="bfill")[0]

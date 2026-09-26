@@ -1,10 +1,11 @@
 """Background training jobs for the web admin area.
 
-A genetic-algorithm run takes minutes, far longer than a web request should
-block.  `JobManager` runs `train_rule` in a daemon thread and exposes a
-thread-safe snapshot (status, progress log, result or error) that the admin
-page polls.  One job runs at a time: the GA is CPU-bound, so concurrent runs
-would only slow each other down, and a single slot keeps the UI simple.
+A GA run takes minutes, which is obviously far too long to block a web
+request on, so `JobManager` runs `train_rule` in a daemon thread and exposes
+a thread-safe snapshot (status, progress log, result or error) that the
+admin page polls. I only allow one job at a time: the GA is CPU-bound, so
+running two at once would just make both slower, and a single slot keeps
+both the locking and the UI much simpler.
 """
 
 from __future__ import annotations
@@ -26,8 +27,8 @@ class Job:
     error: str | None = None
     started_at: float | None = None
     finished_at: float | None = None
-    generation: int = 0              # last generation reported
-    generations: int = 0             # total requested
+    generation: int = 0              # last generation the worker reported
+    generations: int = 0             # total requested, for the progress bar
 
     def snapshot(self) -> dict:
         elapsed = None
@@ -47,7 +48,7 @@ class Job:
 
 
 class JobManager:
-    """Owns at most one active job plus a short history of finished ones."""
+    """Owns at most one active job, plus a short history of finished ones."""
 
     def __init__(self, max_history: int = 10):
         self._lock = threading.Lock()
@@ -69,7 +70,7 @@ class JobManager:
             return [j.snapshot() for j in self._history]
 
     def start(self, req: TrainRequest) -> Job:
-        """Validate and launch a job; raises RuntimeError if one is running."""
+        """Validate the request and launch a job. Raises RuntimeError if one is already running."""
         req.validate()
         with self._lock:
             if self._current and self._current.status in ("queued", "running"):
@@ -104,7 +105,7 @@ class JobManager:
                 job.result = outcome.to_dict()
                 job.status = "done"
                 job.generation = job.generations
-        except Exception as exc:  # surfaced to the admin page, never crashes the server
+        except Exception as exc:  # any failure is shown on the admin page, never crashes the server
             with self._lock:
                 job.error = f"{type(exc).__name__}: {exc}"
                 job.log.append("Traceback:\n" + traceback.format_exc())

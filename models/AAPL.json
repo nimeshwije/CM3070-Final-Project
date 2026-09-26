@@ -2,47 +2,47 @@
   "ticker": "AAPL",
   "genome": {
     "short_window": 5,
-    "long_window": 222,
-    "rsi_period": 30,
-    "rsi_buy": 49,
-    "rsi_sell": 76
+    "long_window": 20,
+    "rsi_period": 14,
+    "rsi_buy": 50,
+    "rsi_sell": 74
   },
-  "rule_text": "Buy when the 5-day average price rises above the 222-day average and the 30-day RSI is below 49; sell when the 5-day average falls below the 222-day average or the RSI rises above 76.",
+  "rule_text": "Buy when the 5-day average price rises above the 20-day average and the 14-day RSI is below 50; sell when the 5-day average falls below the 20-day average or the RSI rises above 74.",
   "train_metrics": {
-    "total_return": 6.4774895454615145,
-    "benchmark_total_return": 5.917483063549003,
-    "sharpe": 1.4640871567079992,
-    "benchmark_sharpe": 1.1076329279912724,
-    "max_drawdown": -0.28072202332181684,
-    "benchmark_max_drawdown": -0.38515910673560916,
-    "annual_volatility": 0.2140706562664074,
-    "benchmark_annual_volatility": 0.29019258461056835,
-    "n_trades": 15,
-    "trades_per_year": 2.1649484536082473,
-    "time_in_market": 0.5395189003436426
+    "total_return": 3.00912832654671,
+    "benchmark_total_return": 5.344214954060818,
+    "sharpe": 1.4778294462522974,
+    "benchmark_sharpe": 0.9050278762403116,
+    "max_drawdown": -0.17142594832326763,
+    "benchmark_max_drawdown": -0.38515921909787243,
+    "annual_volatility": 0.11948143168068921,
+    "benchmark_annual_volatility": 0.29844484766383556,
+    "n_trades": 87,
+    "trades_per_year": 10.616949152542373,
+    "time_in_market": 0.2062953995157385
   },
   "test_metrics": {
-    "total_return": 0.14108144987574223,
-    "benchmark_total_return": 0.37775653262442455,
-    "sharpe": 0.484616508690625,
-    "benchmark_sharpe": 0.5304913022222976,
-    "max_drawdown": -0.12024252511520217,
-    "benchmark_max_drawdown": -0.3091281921353881,
-    "annual_volatility": 0.10246573580530696,
-    "benchmark_annual_volatility": 0.27356401136579495,
-    "n_trades": 3,
-    "trades_per_year": 1.0093457943925233,
-    "time_in_market": 0.29906542056074764
+    "total_return": 0.14954471087252563,
+    "benchmark_total_return": 1.2363136322766612,
+    "sharpe": 0.4075350813236064,
+    "benchmark_sharpe": 1.0145417319293961,
+    "max_drawdown": -0.22631673514104877,
+    "benchmark_max_drawdown": -0.3336051768628562,
+    "annual_volatility": 0.11323165817662009,
+    "benchmark_annual_volatility": 0.2587818045428481,
+    "n_trades": 45,
+    "trades_per_year": 12.813559322033898,
+    "time_in_market": 0.18192090395480226
   },
   "meta": {
-    "data_source": "cache",
+    "data_source": "yfinance",
     "train_range": [
       "2015-01-02",
-      "2021-12-07"
+      "2023-03-16"
     ],
     "test_range": [
-      "2021-12-08",
-      "2024-11-29"
+      "2023-03-17",
+      "2026-09-25"
     ],
     "ga": {
       "population_size": 60,
@@ -65,494 +65,494 @@
     "history": [
       {
         "generation": 0,
-        "best_fitness": 0.6897935283145215,
-        "mean_fitness": -0.5103471450880817,
+        "best_fitness": 0.7083870050020841,
+        "mean_fitness": -0.5155686603932189,
         "best_genome": {
-          "short_window": 8,
-          "long_window": 178,
-          "rsi_period": 11,
-          "rsi_buy": 41,
-          "rsi_sell": 89
+          "short_window": 39,
+          "long_window": 158,
+          "rsi_period": 29,
+          "rsi_buy": 42,
+          "rsi_sell": 76
         }
       },
       {
         "generation": 1,
-        "best_fitness": 0.8538523144581066,
-        "mean_fitness": 0.006973250353758638,
+        "best_fitness": 0.7516317338223015,
+        "mean_fitness": -0.1177267899377799,
         "best_genome": {
-          "short_window": 5,
-          "long_window": 144,
-          "rsi_period": 23,
-          "rsi_buy": 48,
-          "rsi_sell": 79
+          "short_window": 6,
+          "long_window": 20,
+          "rsi_period": 17,
+          "rsi_buy": 57,
+          "rsi_sell": 77
         }
       },
       {
         "generation": 2,
-        "best_fitness": 0.8538523144581066,
-        "mean_fitness": 0.1463185840535823,
+        "best_fitness": 0.7597522928433497,
+        "mean_fitness": 0.1978563588655642,
         "best_genome": {
           "short_window": 5,
-          "long_window": 144,
+          "long_window": 20,
           "rsi_period": 23,
-          "rsi_buy": 48,
+          "rsi_buy": 49,
           "rsi_sell": 79
         }
       },
       {
         "generation": 3,
-        "best_fitness": 0.9574475959874262,
-        "mean_fitness": 0.3258559462227574,
+        "best_fitness": 0.9625516249055439,
+        "mean_fitness": 0.28975750083953994,
         "best_genome": {
-          "short_window": 5,
-          "long_window": 222,
+          "short_window": 28,
+          "long_window": 229,
           "rsi_period": 25,
-          "rsi_buy": 48,
-          "rsi_sell": 74
+          "rsi_buy": 42,
+          "rsi_sell": 71
         }
       },
       {
         "generation": 4,
-        "best_fitness": 0.9772171521898008,
-        "mean_fitness": 0.3836338004997668,
+        "best_fitness": 0.9625516249055439,
+        "mean_fitness": 0.30035058484141824,
         "best_genome": {
-          "short_window": 35,
-          "long_window": 202,
-          "rsi_period": 12,
-          "rsi_buy": 38,
-          "rsi_sell": 83
+          "short_window": 28,
+          "long_window": 229,
+          "rsi_period": 25,
+          "rsi_buy": 42,
+          "rsi_sell": 71
         }
       },
       {
         "generation": 5,
-        "best_fitness": 1.0078021346888961,
-        "mean_fitness": 0.3875035581049275,
+        "best_fitness": 1.0044842671921148,
+        "mean_fitness": 0.3246422442742639,
         "best_genome": {
-          "short_window": 23,
-          "long_window": 250,
-          "rsi_period": 12,
-          "rsi_buy": 38,
-          "rsi_sell": 83
+          "short_window": 5,
+          "long_window": 20,
+          "rsi_period": 15,
+          "rsi_buy": 49,
+          "rsi_sell": 79
         }
       },
       {
         "generation": 6,
-        "best_fitness": 1.078713542821459,
-        "mean_fitness": 0.4893826172713717,
+        "best_fitness": 1.0417149710845428,
+        "mean_fitness": 0.4885272970760845,
         "best_genome": {
-          "short_window": 5,
-          "long_window": 222,
-          "rsi_period": 29,
+          "short_window": 17,
+          "long_window": 20,
+          "rsi_period": 24,
           "rsi_buy": 50,
-          "rsi_sell": 74
+          "rsi_sell": 71
         }
       },
       {
         "generation": 7,
-        "best_fitness": 1.078713542821459,
-        "mean_fitness": 0.5556486495062011,
+        "best_fitness": 1.0845739164847275,
+        "mean_fitness": 0.4716642818973465,
         "best_genome": {
           "short_window": 5,
-          "long_window": 222,
-          "rsi_period": 29,
+          "long_window": 20,
+          "rsi_period": 12,
+          "rsi_buy": 49,
+          "rsi_sell": 89
+        }
+      },
+      {
+        "generation": 8,
+        "best_fitness": 1.0845739164847275,
+        "mean_fitness": 0.5151645053317238,
+        "best_genome": {
+          "short_window": 5,
+          "long_window": 20,
+          "rsi_period": 12,
+          "rsi_buy": 49,
+          "rsi_sell": 89
+        }
+      },
+      {
+        "generation": 9,
+        "best_fitness": 1.1747641085888978,
+        "mean_fitness": 0.5602844281700686,
+        "best_genome": {
+          "short_window": 5,
+          "long_window": 20,
+          "rsi_period": 12,
+          "rsi_buy": 49,
+          "rsi_sell": 75
+        }
+      },
+      {
+        "generation": 10,
+        "best_fitness": 1.1747641085888978,
+        "mean_fitness": 0.5669277743187162,
+        "best_genome": {
+          "short_window": 5,
+          "long_window": 20,
+          "rsi_period": 12,
+          "rsi_buy": 49,
+          "rsi_sell": 75
+        }
+      },
+      {
+        "generation": 11,
+        "best_fitness": 1.1747641085888978,
+        "mean_fitness": 0.5473270777361389,
+        "best_genome": {
+          "short_window": 5,
+          "long_window": 20,
+          "rsi_period": 12,
+          "rsi_buy": 49,
+          "rsi_sell": 75
+        }
+      },
+      {
+        "generation": 12,
+        "best_fitness": 1.1747641085888978,
+        "mean_fitness": 0.7868226126195503,
+        "best_genome": {
+          "short_window": 5,
+          "long_window": 20,
+          "rsi_period": 12,
+          "rsi_buy": 49,
+          "rsi_sell": 75
+        }
+      },
+      {
+        "generation": 13,
+        "best_fitness": 1.175607444915503,
+        "mean_fitness": 0.658043396185841,
+        "best_genome": {
+          "short_window": 5,
+          "long_window": 20,
+          "rsi_period": 14,
+          "rsi_buy": 50,
+          "rsi_sell": 75
+        }
+      },
+      {
+        "generation": 14,
+        "best_fitness": 1.175607444915503,
+        "mean_fitness": 0.692766934945185,
+        "best_genome": {
+          "short_window": 5,
+          "long_window": 20,
+          "rsi_period": 14,
+          "rsi_buy": 50,
+          "rsi_sell": 75
+        }
+      },
+      {
+        "generation": 15,
+        "best_fitness": 1.175607444915503,
+        "mean_fitness": 0.6051204442891652,
+        "best_genome": {
+          "short_window": 5,
+          "long_window": 20,
+          "rsi_period": 14,
+          "rsi_buy": 50,
+          "rsi_sell": 75
+        }
+      },
+      {
+        "generation": 16,
+        "best_fitness": 1.1901121809357111,
+        "mean_fitness": 0.747804626400059,
+        "best_genome": {
+          "short_window": 5,
+          "long_window": 20,
+          "rsi_period": 14,
+          "rsi_buy": 50,
+          "rsi_sell": 84
+        }
+      },
+      {
+        "generation": 17,
+        "best_fitness": 1.1901121809357111,
+        "mean_fitness": 0.7250306865810389,
+        "best_genome": {
+          "short_window": 5,
+          "long_window": 20,
+          "rsi_period": 14,
+          "rsi_buy": 50,
+          "rsi_sell": 84
+        }
+      },
+      {
+        "generation": 18,
+        "best_fitness": 1.1901121809357111,
+        "mean_fitness": 0.7357255402663853,
+        "best_genome": {
+          "short_window": 5,
+          "long_window": 20,
+          "rsi_period": 14,
+          "rsi_buy": 50,
+          "rsi_sell": 84
+        }
+      },
+      {
+        "generation": 19,
+        "best_fitness": 1.2492981223153263,
+        "mean_fitness": 0.8128396638921663,
+        "best_genome": {
+          "short_window": 5,
+          "long_window": 20,
+          "rsi_period": 14,
           "rsi_buy": 50,
           "rsi_sell": 74
         }
       },
       {
-        "generation": 8,
-        "best_fitness": 1.1298263692461041,
-        "mean_fitness": 0.6209561869875705,
-        "best_genome": {
-          "short_window": 5,
-          "long_window": 222,
-          "rsi_period": 29,
-          "rsi_buy": 50,
-          "rsi_sell": 76
-        }
-      },
-      {
-        "generation": 9,
-        "best_fitness": 1.1298263692461041,
-        "mean_fitness": 0.5153624486238283,
-        "best_genome": {
-          "short_window": 5,
-          "long_window": 222,
-          "rsi_period": 29,
-          "rsi_buy": 50,
-          "rsi_sell": 76
-        }
-      },
-      {
-        "generation": 10,
-        "best_fitness": 1.1298263692461041,
-        "mean_fitness": 0.6100108422613908,
-        "best_genome": {
-          "short_window": 5,
-          "long_window": 222,
-          "rsi_period": 29,
-          "rsi_buy": 50,
-          "rsi_sell": 76
-        }
-      },
-      {
-        "generation": 11,
-        "best_fitness": 1.1852465181459233,
-        "mean_fitness": 0.77718648636028,
-        "best_genome": {
-          "short_window": 5,
-          "long_window": 222,
-          "rsi_period": 30,
-          "rsi_buy": 49,
-          "rsi_sell": 76
-        }
-      },
-      {
-        "generation": 12,
-        "best_fitness": 1.1852465181459233,
-        "mean_fitness": 0.9346126139855528,
-        "best_genome": {
-          "short_window": 5,
-          "long_window": 222,
-          "rsi_period": 30,
-          "rsi_buy": 49,
-          "rsi_sell": 76
-        }
-      },
-      {
-        "generation": 13,
-        "best_fitness": 1.1852465181459233,
-        "mean_fitness": 0.8546729583222353,
-        "best_genome": {
-          "short_window": 5,
-          "long_window": 222,
-          "rsi_period": 30,
-          "rsi_buy": 49,
-          "rsi_sell": 76
-        }
-      },
-      {
-        "generation": 14,
-        "best_fitness": 1.1852465181459233,
-        "mean_fitness": 0.8566954682264291,
-        "best_genome": {
-          "short_window": 5,
-          "long_window": 222,
-          "rsi_period": 30,
-          "rsi_buy": 49,
-          "rsi_sell": 76
-        }
-      },
-      {
-        "generation": 15,
-        "best_fitness": 1.1852465181459233,
-        "mean_fitness": 0.8378034781001337,
-        "best_genome": {
-          "short_window": 5,
-          "long_window": 222,
-          "rsi_period": 30,
-          "rsi_buy": 49,
-          "rsi_sell": 76
-        }
-      },
-      {
-        "generation": 16,
-        "best_fitness": 1.1852465181459233,
-        "mean_fitness": 0.9194623971119901,
-        "best_genome": {
-          "short_window": 5,
-          "long_window": 222,
-          "rsi_period": 30,
-          "rsi_buy": 49,
-          "rsi_sell": 76
-        }
-      },
-      {
-        "generation": 17,
-        "best_fitness": 1.1852465181459233,
-        "mean_fitness": 0.8949645125847314,
-        "best_genome": {
-          "short_window": 5,
-          "long_window": 222,
-          "rsi_period": 30,
-          "rsi_buy": 49,
-          "rsi_sell": 76
-        }
-      },
-      {
-        "generation": 18,
-        "best_fitness": 1.1852465181459233,
-        "mean_fitness": 0.9165117181831398,
-        "best_genome": {
-          "short_window": 5,
-          "long_window": 222,
-          "rsi_period": 30,
-          "rsi_buy": 49,
-          "rsi_sell": 76
-        }
-      },
-      {
-        "generation": 19,
-        "best_fitness": 1.1852465181459233,
-        "mean_fitness": 0.8681164228321332,
-        "best_genome": {
-          "short_window": 5,
-          "long_window": 222,
-          "rsi_period": 30,
-          "rsi_buy": 49,
-          "rsi_sell": 76
-        }
-      },
-      {
         "generation": 20,
-        "best_fitness": 1.1852465181459233,
-        "mean_fitness": 0.863519864909675,
+        "best_fitness": 1.2492981223153263,
+        "mean_fitness": 0.6987066291034145,
         "best_genome": {
           "short_window": 5,
-          "long_window": 222,
-          "rsi_period": 30,
-          "rsi_buy": 49,
-          "rsi_sell": 76
+          "long_window": 20,
+          "rsi_period": 14,
+          "rsi_buy": 50,
+          "rsi_sell": 74
         }
       },
       {
         "generation": 21,
-        "best_fitness": 1.1852465181459233,
-        "mean_fitness": 0.8125603554476531,
+        "best_fitness": 1.2492981223153263,
+        "mean_fitness": 0.6195150464822086,
         "best_genome": {
           "short_window": 5,
-          "long_window": 222,
-          "rsi_period": 30,
-          "rsi_buy": 49,
-          "rsi_sell": 76
+          "long_window": 20,
+          "rsi_period": 14,
+          "rsi_buy": 50,
+          "rsi_sell": 74
         }
       },
       {
         "generation": 22,
-        "best_fitness": 1.1852465181459233,
-        "mean_fitness": 0.8145086265479857,
+        "best_fitness": 1.2492981223153263,
+        "mean_fitness": 0.6398630357745678,
         "best_genome": {
           "short_window": 5,
-          "long_window": 222,
-          "rsi_period": 30,
-          "rsi_buy": 49,
-          "rsi_sell": 76
+          "long_window": 20,
+          "rsi_period": 14,
+          "rsi_buy": 50,
+          "rsi_sell": 74
         }
       },
       {
         "generation": 23,
-        "best_fitness": 1.1852465181459233,
-        "mean_fitness": 0.8422734955187338,
+        "best_fitness": 1.2492981223153263,
+        "mean_fitness": 0.7107330486994073,
         "best_genome": {
           "short_window": 5,
-          "long_window": 222,
-          "rsi_period": 30,
-          "rsi_buy": 49,
-          "rsi_sell": 76
+          "long_window": 20,
+          "rsi_period": 14,
+          "rsi_buy": 50,
+          "rsi_sell": 74
         }
       },
       {
         "generation": 24,
-        "best_fitness": 1.1852465181459233,
-        "mean_fitness": 0.9433260267258328,
+        "best_fitness": 1.2492981223153263,
+        "mean_fitness": 0.8302104115515775,
         "best_genome": {
           "short_window": 5,
-          "long_window": 222,
-          "rsi_period": 30,
-          "rsi_buy": 49,
-          "rsi_sell": 76
+          "long_window": 20,
+          "rsi_period": 14,
+          "rsi_buy": 50,
+          "rsi_sell": 74
         }
       },
       {
         "generation": 25,
-        "best_fitness": 1.1852465181459233,
-        "mean_fitness": 0.848192459075025,
+        "best_fitness": 1.2492981223153263,
+        "mean_fitness": 0.8092412483116205,
         "best_genome": {
           "short_window": 5,
-          "long_window": 222,
-          "rsi_period": 30,
-          "rsi_buy": 49,
-          "rsi_sell": 76
+          "long_window": 20,
+          "rsi_period": 14,
+          "rsi_buy": 50,
+          "rsi_sell": 74
         }
       },
       {
         "generation": 26,
-        "best_fitness": 1.1852465181459233,
-        "mean_fitness": 0.9450719701076841,
+        "best_fitness": 1.2492981223153263,
+        "mean_fitness": 0.8176390563389998,
         "best_genome": {
           "short_window": 5,
-          "long_window": 222,
-          "rsi_period": 30,
-          "rsi_buy": 49,
-          "rsi_sell": 76
+          "long_window": 20,
+          "rsi_period": 14,
+          "rsi_buy": 50,
+          "rsi_sell": 74
         }
       },
       {
         "generation": 27,
-        "best_fitness": 1.1852465181459233,
-        "mean_fitness": 0.8554456625829648,
+        "best_fitness": 1.2492981223153263,
+        "mean_fitness": 0.6602405235522638,
         "best_genome": {
           "short_window": 5,
-          "long_window": 222,
-          "rsi_period": 30,
-          "rsi_buy": 49,
-          "rsi_sell": 76
+          "long_window": 20,
+          "rsi_period": 14,
+          "rsi_buy": 50,
+          "rsi_sell": 74
         }
       },
       {
         "generation": 28,
-        "best_fitness": 1.1852465181459233,
-        "mean_fitness": 0.8255069866718486,
+        "best_fitness": 1.2492981223153263,
+        "mean_fitness": 0.679733694973564,
         "best_genome": {
           "short_window": 5,
-          "long_window": 222,
-          "rsi_period": 30,
-          "rsi_buy": 49,
-          "rsi_sell": 76
+          "long_window": 20,
+          "rsi_period": 14,
+          "rsi_buy": 50,
+          "rsi_sell": 74
         }
       },
       {
         "generation": 29,
-        "best_fitness": 1.1852465181459233,
-        "mean_fitness": 0.8796341860237722,
+        "best_fitness": 1.2492981223153263,
+        "mean_fitness": 0.6933301229087113,
         "best_genome": {
           "short_window": 5,
-          "long_window": 222,
-          "rsi_period": 30,
-          "rsi_buy": 49,
-          "rsi_sell": 76
+          "long_window": 20,
+          "rsi_period": 14,
+          "rsi_buy": 50,
+          "rsi_sell": 74
         }
       },
       {
         "generation": 30,
-        "best_fitness": 1.1852465181459233,
-        "mean_fitness": 0.8860195029433588,
+        "best_fitness": 1.2492981223153263,
+        "mean_fitness": 0.6232514254360794,
         "best_genome": {
           "short_window": 5,
-          "long_window": 222,
-          "rsi_period": 30,
-          "rsi_buy": 49,
-          "rsi_sell": 76
+          "long_window": 20,
+          "rsi_period": 14,
+          "rsi_buy": 50,
+          "rsi_sell": 74
         }
       },
       {
         "generation": 31,
-        "best_fitness": 1.1852465181459233,
-        "mean_fitness": 0.9006458835283151,
+        "best_fitness": 1.2492981223153263,
+        "mean_fitness": 0.736261862405224,
         "best_genome": {
           "short_window": 5,
-          "long_window": 222,
-          "rsi_period": 30,
-          "rsi_buy": 49,
-          "rsi_sell": 76
+          "long_window": 20,
+          "rsi_period": 14,
+          "rsi_buy": 50,
+          "rsi_sell": 74
         }
       },
       {
         "generation": 32,
-        "best_fitness": 1.1852465181459233,
-        "mean_fitness": 0.882979560738175,
+        "best_fitness": 1.2492981223153263,
+        "mean_fitness": 0.7662612617179405,
         "best_genome": {
           "short_window": 5,
-          "long_window": 222,
-          "rsi_period": 30,
-          "rsi_buy": 49,
-          "rsi_sell": 76
+          "long_window": 20,
+          "rsi_period": 14,
+          "rsi_buy": 50,
+          "rsi_sell": 74
         }
       },
       {
         "generation": 33,
-        "best_fitness": 1.1852465181459233,
-        "mean_fitness": 0.8752388281835002,
+        "best_fitness": 1.2492981223153263,
+        "mean_fitness": 0.7676075854714576,
         "best_genome": {
           "short_window": 5,
-          "long_window": 222,
-          "rsi_period": 30,
-          "rsi_buy": 49,
-          "rsi_sell": 76
+          "long_window": 20,
+          "rsi_period": 14,
+          "rsi_buy": 50,
+          "rsi_sell": 74
         }
       },
       {
         "generation": 34,
-        "best_fitness": 1.1852465181459233,
-        "mean_fitness": 0.8266578386698874,
+        "best_fitness": 1.2492981223153263,
+        "mean_fitness": 0.7282871029652027,
         "best_genome": {
           "short_window": 5,
-          "long_window": 222,
-          "rsi_period": 30,
-          "rsi_buy": 49,
-          "rsi_sell": 76
+          "long_window": 20,
+          "rsi_period": 14,
+          "rsi_buy": 50,
+          "rsi_sell": 74
         }
       },
       {
         "generation": 35,
-        "best_fitness": 1.1852465181459233,
-        "mean_fitness": 0.8516972358152258,
+        "best_fitness": 1.2492981223153263,
+        "mean_fitness": 0.6950813166228439,
         "best_genome": {
           "short_window": 5,
-          "long_window": 222,
-          "rsi_period": 30,
-          "rsi_buy": 49,
-          "rsi_sell": 76
+          "long_window": 20,
+          "rsi_period": 14,
+          "rsi_buy": 50,
+          "rsi_sell": 74
         }
       },
       {
         "generation": 36,
-        "best_fitness": 1.1852465181459233,
-        "mean_fitness": 0.8741419083788136,
+        "best_fitness": 1.2492981223153263,
+        "mean_fitness": 0.6931846877966877,
         "best_genome": {
           "short_window": 5,
-          "long_window": 222,
-          "rsi_period": 30,
-          "rsi_buy": 49,
-          "rsi_sell": 76
+          "long_window": 20,
+          "rsi_period": 14,
+          "rsi_buy": 50,
+          "rsi_sell": 74
         }
       },
       {
         "generation": 37,
-        "best_fitness": 1.1852465181459233,
-        "mean_fitness": 0.8761510620155105,
+        "best_fitness": 1.2492981223153263,
+        "mean_fitness": 0.7411184587089644,
         "best_genome": {
           "short_window": 5,
-          "long_window": 222,
-          "rsi_period": 30,
-          "rsi_buy": 49,
-          "rsi_sell": 76
+          "long_window": 20,
+          "rsi_period": 14,
+          "rsi_buy": 50,
+          "rsi_sell": 74
         }
       },
       {
         "generation": 38,
-        "best_fitness": 1.1852465181459233,
-        "mean_fitness": 0.844291550285389,
+        "best_fitness": 1.2492981223153263,
+        "mean_fitness": 0.695733596035936,
         "best_genome": {
           "short_window": 5,
-          "long_window": 222,
-          "rsi_period": 30,
-          "rsi_buy": 49,
-          "rsi_sell": 76
+          "long_window": 20,
+          "rsi_period": 14,
+          "rsi_buy": 50,
+          "rsi_sell": 74
         }
       },
       {
         "generation": 39,
-        "best_fitness": 1.1852465181459233,
-        "mean_fitness": 0.8242637142379657,
+        "best_fitness": 1.2492981223153263,
+        "mean_fitness": 0.6801869927503872,
         "best_genome": {
           "short_window": 5,
-          "long_window": 222,
-          "rsi_period": 30,
-          "rsi_buy": 49,
-          "rsi_sell": 76
+          "long_window": 20,
+          "rsi_period": 14,
+          "rsi_buy": 50,
+          "rsi_sell": 74
         }
       },
       {
         "generation": 40,
-        "best_fitness": 1.1852465181459233,
-        "mean_fitness": 0.7570692800313646,
+        "best_fitness": 1.2492981223153263,
+        "mean_fitness": 0.6600678868322494,
         "best_genome": {
           "short_window": 5,
-          "long_window": 222,
-          "rsi_period": 30,
-          "rsi_buy": 49,
-          "rsi_sell": 76
+          "long_window": 20,
+          "rsi_period": 14,
+          "rsi_buy": 50,
+          "rsi_sell": 74
         }
       }
     ],
@@ -562,7 +562,7 @@
         "AAPL"
       ],
       "start": "2015-01-01",
-      "end": "2024-11-29",
+      "end": null,
       "train_frac": 0.7,
       "population": 60,
       "generations": 40,
@@ -571,6 +571,6 @@
       "folds": 4,
       "synthetic": false
     },
-    "saved_at": "2026-09-20T13:54:31.910542+00:00"
+    "saved_at": "2026-09-26T15:04:46.969375+00:00"
   }
 }

@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 """Train (evolve) a trading rule for one or more tickers from the terminal.
 
-This is a thin command-line wrapper over `advisor.pipeline.train_rule` --
-the same pipeline the web admin area runs -- so both entry points produce
-identical artifacts for identical settings and seed.
+This script is intentionally thin: it just parses flags and calls
+`advisor.pipeline.train_rule`, the same pipeline the web admin area runs.
+That way both entry points produce identical artifacts for identical
+settings and seed, which is something I test for.
 
 Examples
 --------

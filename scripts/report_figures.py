@@ -1,12 +1,16 @@
-"""All report figures, one consistent style.
+"""Every figure in the final report, generated in one consistent style.
+
+I got tired of figures drifting apart visually as I regenerated them one by
+one, so this script makes all of them in a single run with one shared
+rcParams block and colour palette.
 
 Run from anywhere:   python scripts/report_figures.py
-Reads  reports/final_experiments.json (produced by scripts/report_experiments.py)
+Reads  reports/final_experiments.json (made by scripts/report_experiments.py)
 Writes reports/figures/*.png
 """
 import json, os, sys, warnings
 warnings.filterwarnings("ignore")
-ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))   # the evo-advisor folder
+ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))   # i.e. the evo-advisor folder
 sys.path.insert(0, ROOT)
 import numpy as np, pandas as pd
 import matplotlib
@@ -179,7 +183,7 @@ ax.text(4.0, 3.45, "ENTER when  SMA(short) > SMA(long)  AND  RSI < buy threshold
 ax.add_patch(FancyArrowPatch((5.1, 1.65), (2.9, 1.65), arrowstyle="-|>", mutation_scale=12, color=ORANGE, lw=1.3, connectionstyle="arc3,rad=-0.25"))
 ax.text(4.0, 0.55, "EXIT when  SMA(short) < SMA(long)  OR  RSI > sell threshold", ha="center", fontsize=8.5, color=ORANGE)
 ax.text(4.0, 0.15, "Genome = (short window, long window, RSI period, RSI buy, RSI sell); champion = (5, 222, 30, 49, 76)", ha="center", fontsize=8, color=MUTED)
-# position table on the right
+# the little position-action table on the right of the state machine
 tx, ty = 7.75, 3.25
 ax.text(tx, ty, "Position-aware action", fontsize=8.5, fontweight="bold", color=INK)
 rows = [("rule", "holds?", "action"), ("in market", "yes", "HOLD"), ("in market", "no", "BUY"), ("in cash", "yes", "SELL"), ("in cash", "no", "HOLD")]

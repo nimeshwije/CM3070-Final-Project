@@ -17,7 +17,7 @@ def test_ga_returns_valid_genome_and_history():
     for name, (lo, hi) in GENE_BOUNDS.items():
         assert lo <= getattr(g, name) <= hi
     assert g.short_window < g.long_window
-    assert len(res.history) == 7  # generations + final snapshot
+    assert len(res.history) == 7  # 6 generations plus the final snapshot
 
 
 def test_ga_best_fitness_never_decreases_with_elitism():
@@ -33,10 +33,14 @@ def test_ga_reproducible_from_seed():
 
 
 def test_sparsity_penalty_hits_degenerate_rule():
-    """A rule that never trades must score worse than the same rule trading."""
+    """A rule that never trades has to score worse than one that actually trades.
+
+    This is the regression test for the degenerate-rule pathology I hit in
+    the prototype (rules that never enter the market and so never lose).
+    """
     prices = synthetic_gbm(700, seed=12)
     cfg = FitnessConfig(n_folds=3)
-    never_trades = Genome(10, 40, 14, 10, 95)   # entry ~impossible (RSI < 10)
+    never_trades = Genome(10, 40, 14, 10, 95)   # entry needs RSI < 10, which basically never happens
     plausible = Genome(10, 40, 14, 60, 95)
     assert fitness({"S": prices}, never_trades, cfg) < fitness({"S": prices}, plausible, cfg)
 

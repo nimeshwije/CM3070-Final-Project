@@ -1,6 +1,6 @@
 """The five-gene strategy representation.
 
-A candidate strategy is a genome of five integers:
+Every candidate strategy in my system is just five integers:
 
     short_window : short simple-moving-average window (days)
     long_window  : long simple-moving-average window (days)
@@ -8,13 +8,14 @@ A candidate strategy is a genome of five integers:
     rsi_buy      : RSI level below which entries are allowed
     rsi_sell     : RSI level above which the position is exited
 
-decoded into a long/flat trading rule:
+which decode into a long/flat trading rule:
 
     ENTER (go long)  when  SMA_short > SMA_long  AND  RSI < rsi_buy
     EXIT  (go flat)  when  SMA_short < SMA_long  OR   RSI > rsi_sell
 
-The representation is deliberately tiny so the evolved rule stays readable --
-the interpretability claim in the report is bound to this compactness.
+I kept the representation this small on purpose: the whole point of the
+project is that the evolved rule stays readable by a human, and the
+interpretability argument I make in the report depends on that.
 """
 
 from __future__ import annotations
@@ -23,7 +24,8 @@ import random
 from dataclasses import dataclass, asdict
 
 
-# Inclusive bounds for each gene.  short < long is enforced by repair().
+# Inclusive bounds for each gene. The short < long constraint isn't encoded
+# here -- repair() enforces it after every crossover/mutation.
 GENE_BOUNDS = {
     "short_window": (5, 60),
     "long_window": (20, 250),
@@ -56,7 +58,7 @@ class Genome:
         return Genome(*self.genes())
 
     def describe(self) -> str:
-        """Human-readable statement of the rule -- used in reports and the UI."""
+        """Spell the rule out in plain English (shown in the UI and my report)."""
         return (
             f"Buy when the {self.short_window}-day average price rises above the "
             f"{self.long_window}-day average and the {self.rsi_period}-day RSI is "
@@ -67,23 +69,25 @@ class Genome:
 
     # ------------------------------------------------------------- validity
     def repair(self) -> "Genome":
-        """Clamp genes into bounds and enforce structural constraints.
+        """Clamp genes back into bounds and fix any broken constraints.
 
-        Called after every crossover/mutation so variation operators can be
-        simple and unconstrained.  Constraints: each gene within GENE_BOUNDS;
-        short_window strictly less than long_window; rsi_buy < rsi_sell.
+        I call this after every crossover and mutation, which lets those
+        operators stay simple -- they can produce anything and repair()
+        cleans up. The constraints are: every gene inside GENE_BOUNDS,
+        short_window strictly below long_window, and rsi_buy < rsi_sell.
         """
         names = list(GENE_BOUNDS)
         vals = {}
         for name in names:
             lo, hi = GENE_BOUNDS[name]
             vals[name] = int(min(max(round(getattr(self, name)), lo), hi))
-        # short strictly below long
+        # If the windows ended up inverted, push the long window up (or the
+        # short one down if we hit the upper bound).
         if vals["short_window"] >= vals["long_window"]:
             vals["long_window"] = min(vals["short_window"] + 10, GENE_BOUNDS["long_window"][1])
             if vals["short_window"] >= vals["long_window"]:
                 vals["short_window"] = vals["long_window"] - 10
-        # buy threshold strictly below sell threshold
+        # Same idea for the RSI thresholds: buy must sit below sell.
         if vals["rsi_buy"] >= vals["rsi_sell"]:
             vals["rsi_buy"] = min(vals["rsi_buy"], vals["rsi_sell"] - 5)
             lo_buy, _ = GENE_BOUNDS["rsi_buy"]
@@ -94,6 +98,6 @@ class Genome:
 
 
 def random_genome(rng: random.Random) -> Genome:
-    """Sample a uniformly random (then repaired) genome."""
+    """Sample a uniformly random genome, then repair it so it's valid."""
     g = Genome(**{name: rng.randint(lo, hi) for name, (lo, hi) in GENE_BOUNDS.items()})
     return g.repair()

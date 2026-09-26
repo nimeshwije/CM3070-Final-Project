@@ -1,23 +1,25 @@
-"""Walk-forward, regularised, multi-asset fitness.
+"""The fitness function: walk-forward, regularised, and optionally multi-asset.
 
-This module addresses the overfitting finding of the feature prototype
-(report Chapter 4): a single in-sample Sharpe rewards rules that memorise one
-period.  Three counter-measures are applied *during* the search:
+This module is my answer to the biggest problem I found while building the
+feature prototype (Chapter 4 of the report): if fitness is just one
+in-sample Sharpe ratio, the GA happily evolves rules that memorise one lucky
+period. I ended up applying three counter-measures *during* the search
+itself, not just at evaluation time:
 
-1. WALK-FORWARD FITNESS.  The training window is split into K contiguous
-   folds.  For each fold k, the rule is scored on fold k using only data up
-   to the end of that fold (indicators warm up on preceding data).  The
-   fitness aggregates the per-fold Sharpe ratios as  mean - lambda * std,
-   so a rule must perform *consistently across sub-periods*, not just once.
+1. WALK-FORWARD FITNESS. The training window is split into K contiguous
+   folds, and the rule is scored on each fold separately (indicators warm up
+   on the data before the fold, so no fold ever sees the future). The
+   fitness is then  mean - lambda * std  of the per-fold Sharpes, which
+   means a rule has to work consistently across sub-periods, not just once.
 
-2. REGULARISATION AGAINST DEGENERATE RULES.  Rules that almost never trade
-   (the prototype's "RSI < 20 and RSI > 90" pathology) get a penalty
-   proportional to how far their trade count falls below a minimum
-   trades-per-year target.
+2. A PENALTY FOR DEGENERATE RULES. My prototype kept evolving rules like
+   "RSI < 20 and RSI > 90" that essentially never trade and therefore never
+   lose. Rules whose trade count falls below a minimum trades-per-year
+   target now get penalised in proportion to the shortfall.
 
-3. MULTI-ASSET EVOLUTION.  Fitness can be computed over several tickers and
-   averaged (minus a dispersion penalty), rewarding rules that generalise
-   across assets rather than fitting one stock's idiosyncrasies.
+3. MULTI-ASSET EVOLUTION. Fitness can be averaged over several tickers
+   (minus a dispersion penalty), so the GA is rewarded for rules that
+   generalise across assets instead of fitting one stock's quirks.
 """
 
 from __future__ import annotations
@@ -44,12 +46,13 @@ class FitnessConfig:
 def _fold_sharpes(prices: pd.Series, genome: Genome, cfg: FitnessConfig) -> list[float]:
     """Sharpe ratio of the rule on each contiguous walk-forward fold.
 
-    Indicators are computed on the full history up to each fold's end, then
-    returns are scored only inside the fold -- so later folds see realistic
-    warmed-up indicators and no fold sees future data.
+    The trick here: I run one backtest over the whole training window (so
+    indicators are properly warmed up everywhere), then score the returns
+    fold by fold. Later folds therefore see realistic indicator state, and
+    no fold can ever see data from after its own end.
     """
     n = len(prices)
-    if n < cfg.n_folds * 60:  # need a sane minimum per fold
+    if n < cfg.n_folds * 60:  # too little data to fold sensibly -> one score
         return [run_backtest(prices, genome, cfg.cost).metrics["sharpe"]]
 
     edges = np.linspace(0, n, cfg.n_folds + 1, dtype=int)
@@ -62,7 +65,7 @@ def _fold_sharpes(prices: pd.Series, genome: Genome, cfg: FitnessConfig) -> list
 
 
 def fitness_single_asset(prices: pd.Series, genome: Genome, cfg: FitnessConfig) -> float:
-    """Walk-forward, sparsity-regularised fitness on one asset."""
+    """The walk-forward, sparsity-penalised fitness score for one asset."""
     result = run_backtest(prices, genome, cfg.cost)
     sharpes = _fold_sharpes(prices, genome, cfg)
 
@@ -70,8 +73,9 @@ def fitness_single_asset(prices: pd.Series, genome: Genome, cfg: FitnessConfig) 
     std_s = float(np.std(sharpes))
     score = mean_s - cfg.consistency_lambda * std_s
 
-    # Sparsity penalty: rules that barely trade are un-testable and usually
-    # overfit to a handful of historical episodes.
+    # Sparsity penalty. A rule that barely trades can't really be tested and
+    # in my experience was always overfit to a couple of historical episodes,
+    # so trading too rarely costs fitness.
     tpy = result.metrics["trades_per_year"]
     if tpy < cfg.min_trades_per_year:
         score -= cfg.sparsity_penalty * (cfg.min_trades_per_year - tpy) / cfg.min_trades_per_year
@@ -81,9 +85,10 @@ def fitness_single_asset(prices: pd.Series, genome: Genome, cfg: FitnessConfig) 
 def fitness(price_map: dict[str, pd.Series], genome: Genome, cfg: FitnessConfig | None = None) -> float:
     """Aggregate fitness across one or more assets.
 
-    For a single asset this reduces to `fitness_single_asset`.  For several,
-    the score is  mean(asset scores) - dispersion_lambda * std(asset scores),
-    favouring rules whose quality is uniform across markets.
+    With one asset this is just `fitness_single_asset`. With several, the
+    score is  mean(asset scores) - dispersion_lambda * std(asset scores),
+    which prefers rules that are decent everywhere over rules that are
+    brilliant on one ticker and terrible on the rest.
     """
     cfg = cfg or FitnessConfig()
     scores = [fitness_single_asset(p, genome, cfg) for p in price_map.values()]

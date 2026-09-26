@@ -1,16 +1,20 @@
-"""The genetic algorithm.
+"""The genetic algorithm itself.
 
-Population-based search over the five-gene genome space, maximising the
-walk-forward fitness.  Operators (as specified in the design chapter):
+A fairly classic population-based search over the five-gene space,
+maximising the walk-forward fitness. The operators I settled on (justified
+in the design chapter of the report):
 
-  * tournament selection (size 3),
+  * tournament selection with tournaments of size 3,
   * uniform crossover,
-  * per-gene Gaussian mutation with sigma proportional to the gene's range,
-  * elitism (the best E genomes survive unchanged),
-  * repair after every variation so all genomes stay valid.
+  * per-gene Gaussian mutation, with sigma scaled to each gene's range so
+    that a mutation means roughly the same "amount of change" for every gene,
+  * elitism (the best E genomes survive into the next generation unchanged),
+  * repair after every variation, so the population only ever contains
+    valid genomes.
 
-The run is fully reproducible from a seed, and the returned history supports
-the convergence plots used in the evaluation chapter.
+Everything is driven by one seeded random.Random, so a run is exactly
+reproducible from its seed -- I rely on this both in the tests and for the
+convergence plots in the evaluation chapter.
 """
 
 from __future__ import annotations
@@ -40,18 +44,18 @@ class GAConfig:
 class GAResult:
     best_genome: Genome
     best_fitness: float
-    history: list[dict] = field(default_factory=list)  # per-generation stats
+    history: list[dict] = field(default_factory=list)  # per-generation stats, for the plots
     final_population: list[tuple[Genome, float]] = field(default_factory=list)
 
 
 def _tournament(pop: list[tuple[Genome, float]], rng: random.Random, k: int) -> Genome:
-    """Pick k random individuals, return (a copy of) the fittest."""
+    """Tournament selection: sample k individuals, return a copy of the best one."""
     contenders = rng.sample(pop, k)
     return max(contenders, key=lambda gf: gf[1])[0].copy()
 
 
 def _crossover(a: Genome, b: Genome, rng: random.Random) -> Genome:
-    """Uniform crossover: each gene inherited from either parent with p=0.5."""
+    """Uniform crossover: each gene comes from either parent with probability 0.5."""
     genes = {}
     for name in GENE_BOUNDS:
         genes[name] = getattr(a if rng.random() < 0.5 else b, name)
@@ -59,7 +63,7 @@ def _crossover(a: Genome, b: Genome, rng: random.Random) -> Genome:
 
 
 def _mutate(g: Genome, rng: random.Random, cfg: GAConfig) -> Genome:
-    """Gaussian mutation: each gene perturbed with probability mutation_rate."""
+    """Gaussian mutation: each gene gets nudged with probability mutation_rate."""
     genes = g.to_dict()
     for name, (lo, hi) in GENE_BOUNDS.items():
         if rng.random() < cfg.mutation_rate:
@@ -74,12 +78,13 @@ def evolve(
     fit_cfg: FitnessConfig | None = None,
     progress_callback=None,
 ) -> GAResult:
-    """Run the genetic algorithm over the training price data.
+    """Run the GA over the training price data and return the best rule found.
 
-    `price_map` maps ticker -> training-window price series (one entry for
-    single-asset evolution, several for multi-asset).  Returns the best
-    genome, its fitness, and a per-generation history for convergence plots.
-    `progress_callback(gen, best, mean)` is invoked once per generation.
+    `price_map` maps ticker -> training-window price series: one entry for
+    single-asset evolution, several for multi-asset. The result carries the
+    best genome, its fitness, and the per-generation history I use for the
+    convergence plots. If given, `progress_callback(gen, best, mean)` is
+    called once per generation -- that's how the web admin shows live progress.
     """
     ga_cfg = ga_cfg or GAConfig()
     fit_cfg = fit_cfg or FitnessConfig()
@@ -88,7 +93,9 @@ def evolve(
     def evaluate(g: Genome) -> float:
         return fitness(price_map, g, fit_cfg)
 
-    # Memoise: genome space is small and elites recur, so caching saves work.
+    # Memoise fitness evaluations. The genome space is small and elites come
+    # back every generation, so this cache saves a surprising amount of time
+    # (fitness is by far the expensive part of a run).
     cache: dict[tuple, float] = {}
 
     def cached_eval(g: Genome) -> float:
@@ -114,7 +121,7 @@ def evolve(
         if progress_callback:
             progress_callback(gen, best_f, mean_f)
 
-        # Elites pass through unchanged.
+        # Elitism: the top E go straight through, untouched.
         next_pop: list[Genome] = [g.copy() for g, _ in scored[: ga_cfg.elitism]]
 
         while len(next_pop) < ga_cfg.population_size:

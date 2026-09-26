@@ -1,11 +1,12 @@
 #!/usr/bin/env python3
 """Full quantitative evaluation of a saved rule.
 
-Produces, for a ticker with a trained artifact in models/:
+For any ticker with a trained artifact in models/, this prints:
   * the in-sample / out-of-sample / buy-and-hold summary table,
   * a rolling walk-forward table across the full history,
-  * plots: equity curves (train+test), GA convergence, drawdown -- saved
-    under reports/ for direct inclusion in the final report.
+and saves three plots (equity curves for train+test, GA convergence, and
+drawdown) under reports/ -- these are the figures I drop straight into the
+final report.
 
 Example:
     python scripts/evaluate.py --ticker AAPL
@@ -57,7 +58,7 @@ def main() -> int:
 
     os.makedirs(REPORTS_DIR, exist_ok=True)
 
-    # ---- equity curves ---------------------------------------------------
+    # ---- plot 1: equity curves, train and test stacked ---------------------
     fig, axes = plt.subplots(2, 1, figsize=(10, 8), sharex=False)
     for ax, res, title in (
         (axes[0], ev.train_result, f"{args.ticker} in-sample {ev.train_range}"),
@@ -75,7 +76,7 @@ def main() -> int:
     fig.savefig(eq_path, dpi=150)
     print(f"Saved {eq_path}")
 
-    # ---- GA convergence (if history stored) ------------------------------
+    # ---- plot 2: GA convergence (only if the artifact stored the history) --
     history = art.get("meta", {}).get("history")
     if history:
         h = pd.DataFrame(history)
@@ -91,7 +92,7 @@ def main() -> int:
         fig2.savefig(conv_path, dpi=150)
         print(f"Saved {conv_path}")
 
-    # ---- drawdown --------------------------------------------------------
+    # ---- plot 3: out-of-sample drawdown, strategy vs benchmark -------------
     fig3, ax3 = plt.subplots(figsize=(10, 4))
     eq = ev.test_result.equity
     dd = eq / eq.cummax() - 1.0

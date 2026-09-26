@@ -1,12 +1,13 @@
-"""Transaction-cost-aware backtesting and performance metrics.
+"""The backtester: simulates a genome's rule over a price history, with costs.
 
-The backtester simulates the long/flat rule decoded from a genome over a
-price history.  Two honesty measures from the report are built in:
+Two honesty measures are built directly into this module rather than bolted
+on later, because getting either wrong silently inflates every result:
 
-  * signals are acted on ONE DAY LATER (no look-ahead bias) -- the return on
-    day t is earned by the position decided on day t-1;
+  * signals are acted on ONE DAY LATER -- the return on day t is earned by
+    the position decided on day t-1, so the rule can never trade on
+    information it hasn't seen yet (no look-ahead bias);
   * a proportional transaction cost is charged every time the position
-    changes, so strategies that trade often are not flattered.
+    changes, so a rule that trades constantly doesn't get flattered.
 """
 
 from __future__ import annotations
@@ -20,15 +21,17 @@ from .genome import Genome
 from .indicators import rsi, sma
 
 TRADING_DAYS = 252
-DEFAULT_COST = 0.001  # 10 basis points per side -- a common retail assumption
+DEFAULT_COST = 0.001  # 10 basis points per side -- a fairly standard retail assumption
 
 
 def compute_positions(prices: pd.Series, genome: Genome) -> pd.Series:
     """Decode a genome into a daily position series (1 = long, 0 = flat).
 
-    The rule is stateful: entry requires SMA_short > SMA_long AND RSI < buy
-    threshold; exit occurs when SMA_short < SMA_long OR RSI > sell threshold.
-    Days with insufficient indicator history stay flat.
+    The rule is stateful, which is why this is a loop rather than a vectorised
+    expression: whether we are in the market today depends on whether we were
+    in it yesterday. Entry needs SMA_short > SMA_long AND RSI < buy threshold;
+    exit happens when SMA_short < SMA_long OR RSI > sell threshold. Days where
+    the indicators haven't warmed up yet stay flat.
     """
     s = sma(prices, genome.short_window)
     l = sma(prices, genome.long_window)
@@ -57,7 +60,7 @@ def compute_positions(prices: pd.Series, genome: Genome) -> pd.Series:
 
 @dataclass
 class BacktestResult:
-    """Everything needed to evaluate (and plot) one backtest."""
+    """Everything I need to evaluate (and later plot) a single backtest."""
 
     equity: pd.Series                 # strategy equity curve, starts at 1.0
     benchmark_equity: pd.Series       # buy-and-hold equity curve, starts at 1.0
@@ -68,7 +71,7 @@ class BacktestResult:
 
 
 def sharpe_ratio(daily_returns: pd.Series, risk_free_annual: float = 0.0) -> float:
-    """Annualised Sharpe ratio of a daily return series."""
+    """Annualised Sharpe ratio of a daily return series (0.0 for degenerate input)."""
     r = daily_returns.dropna()
     if len(r) < 2:
         return 0.0
@@ -80,7 +83,7 @@ def sharpe_ratio(daily_returns: pd.Series, risk_free_annual: float = 0.0) -> flo
 
 
 def max_drawdown(equity: pd.Series) -> float:
-    """Maximum peak-to-trough drawdown, returned as a negative fraction."""
+    """Worst peak-to-trough drawdown, returned as a negative fraction."""
     if len(equity) == 0:
         return 0.0
     running_max = equity.cummax()
@@ -93,15 +96,17 @@ def run_backtest(
     genome: Genome,
     cost: float = DEFAULT_COST,
 ) -> BacktestResult:
-    """Simulate `genome`'s rule over `prices`, net of transaction costs."""
+    """Run `genome`'s rule over `prices` and return equity, positions and metrics."""
     prices = prices.dropna()
     asset_returns = prices.pct_change().fillna(0.0)
 
     signal_pos = compute_positions(prices, genome)
-    # Act one day after the signal: today's return is earned by yesterday's decision.
+    # The one-day lag: today's return goes to yesterday's decision. This single
+    # shift(1) is what prevents look-ahead bias, and test_one_day_lag_no_lookahead
+    # exists specifically to make sure nobody (including me) removes it.
     held_pos = signal_pos.shift(1).fillna(0.0)
 
-    # Cost is charged on the day the position changes (both entries and exits).
+    # Charge the cost on the day the position changes -- entries and exits both.
     turnover = held_pos.diff().abs().fillna(held_pos.abs())
     strat_returns = held_pos * asset_returns - cost * turnover
 

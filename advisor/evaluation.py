@@ -1,9 +1,10 @@
 """Out-of-sample evaluation against a buy-and-hold benchmark.
 
-Implements the evaluation strategy from the report's design chapter: a
-chronological train/test split (the GA never sees the test window), metrics
-reported strategy-vs-benchmark, and an optional rolling walk-forward
-evaluation across the full history for the final report.
+This implements the evaluation strategy I set out in the design chapter:
+a chronological train/test split (the GA never gets to see the test
+window), every metric reported side by side with buy-and-hold, and a
+rolling walk-forward evaluation over the full history that I use in the
+final report to show how performance varies by market regime.
 """
 
 from __future__ import annotations
@@ -24,7 +25,7 @@ class SplitEvaluation:
     test_range: tuple[str, str]
 
     def summary_table(self) -> pd.DataFrame:
-        """The report's headline table: in-sample vs out-of-sample vs benchmark."""
+        """The headline table in my report: in-sample vs out-of-sample vs benchmark."""
         tr, te = self.train_result.metrics, self.test_result.metrics
         rows = {
             "Total return": [tr["total_return"], te["total_return"], te["benchmark_total_return"]],
@@ -42,7 +43,7 @@ class SplitEvaluation:
 
 
 def chronological_split(prices: pd.Series, train_frac: float = 0.7) -> tuple[pd.Series, pd.Series]:
-    """Split a price series chronologically into train (older) and test (recent)."""
+    """Split a price series in time order: train on the older part, test on the recent part."""
     if not 0.1 <= train_frac <= 0.95:
         raise ValueError("train_frac should be in [0.1, 0.95]")
     cut = int(len(prices) * train_frac)
@@ -55,7 +56,7 @@ def evaluate_split(
     train_frac: float = 0.7,
     cost: float | None = None,
 ) -> SplitEvaluation:
-    """Backtest `genome` separately on the train and held-out test windows."""
+    """Backtest `genome` on the train window and the held-out test window separately."""
     cost = DEFAULT_COST if cost is None else cost
     train, test = chronological_split(prices, train_frac)
     train_res = run_backtest(train, genome, cost)
@@ -76,8 +77,9 @@ def walk_forward_report(
 ) -> pd.DataFrame:
     """Rolling evaluation: score the rule on consecutive windows of history.
 
-    Used in the final report to show how performance varies by regime
-    (cf. Potvin et al. 2004 on regime-dependence).
+    I use this in the final report to show that performance depends heavily
+    on the market regime -- the same effect Potvin et al. (2004) report for
+    GP-evolved trading rules.
     """
     cost = DEFAULT_COST if cost is None else cost
     w = int(window_years * TRADING_DAYS)

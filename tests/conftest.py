@@ -1,4 +1,4 @@
-"""Make the project root importable when running pytest from anywhere."""
+"""Makes the project root importable so pytest works no matter where it's run from."""
 import os
 import sys
 

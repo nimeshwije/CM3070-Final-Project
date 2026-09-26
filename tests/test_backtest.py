@@ -15,12 +15,16 @@ def test_positions_are_binary_and_flat_during_warmup():
     prices = synthetic_gbm(400, seed=3)
     pos = compute_positions(prices, GENOME)
     assert set(np.unique(pos)) <= {0.0, 1.0}
-    # No position before the long window has data.
+    # Must be flat until the long moving average has enough data.
     assert (pos.iloc[: GENOME.long_window - 1] == 0).all()
 
 
 def test_one_day_lag_no_lookahead():
-    """The held position must equal the previous day's signal."""
+    """The position actually held must equal the *previous* day's signal.
+
+    This is the test that protects the no-look-ahead property -- if someone
+    removes the shift(1) in run_backtest, this fails immediately.
+    """
     prices = synthetic_gbm(400, seed=4)
     res = run_backtest(prices, GENOME, cost=0.0)
     signal = compute_positions(prices, GENOME)
@@ -41,7 +45,7 @@ def test_always_flat_rule_has_zero_return():
     prices = pd.Series(
         np.linspace(100, 200, 300),
         index=pd.bdate_range("2020-01-01", periods=300),
-    )  # smooth rise -> RSI stays ~100, never below 10
+    )  # a perfectly smooth rise keeps RSI pinned near 100, so entry (RSI < 10) never fires
     res = run_backtest(prices, g)
     assert res.n_trades == 0
     assert res.metrics["total_return"] == pytest.approx(0.0)

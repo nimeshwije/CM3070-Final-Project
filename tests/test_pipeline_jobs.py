@@ -1,4 +1,8 @@
-"""Tests for the shared training pipeline and the background job manager."""
+"""Tests for the shared training pipeline and the background job manager.
+
+Everything runs on synthetic data with tiny GA settings, so the whole file
+is fast and needs no network.
+"""
 import time
 
 import pytest
@@ -11,7 +15,7 @@ from advisor.pipeline import TrainRequest, train_rule
 
 @pytest.fixture
 def models_dir(tmp_path, monkeypatch):
-    """Redirect artifact storage to a temp folder so tests never touch models/."""
+    """Point artifact storage at a temp folder so tests can never touch my real models/."""
     monkeypatch.setattr(persistence, "MODELS_DIR", str(tmp_path))
     return tmp_path
 
@@ -30,7 +34,7 @@ def test_request_validation_rejects_bad_input():
         TrainRequest(tickers=["AAPL"], population=2).validate()
     with pytest.raises(ValueError):
         TrainRequest(tickers=["AAPL"], train_frac=0.99).validate()
-    TrainRequest(tickers=["BRK-B", "^GSPC", "BTC-USD"]).validate()  # legitimate symbols
+    TrainRequest(tickers=["BRK-B", "^GSPC", "BTC-USD"]).validate()  # odd-looking but legitimate symbols
 
 
 def test_train_rule_saves_artifact_and_reports_progress(models_dir):
@@ -41,20 +45,24 @@ def test_train_rule_saves_artifact_and_reports_progress(models_dir):
     assert art["genome"] == outcome.genome
     assert any(l.startswith("gen ") for l in lines)
     assert outcome.per_ticker[0]["test"]["sharpe"] is not None
-    assert len(outcome.history) == 4  # 3 generations + final snapshot
+    assert len(outcome.history) == 4  # 3 generations plus the final snapshot
 
 
 def test_multi_asset_training_saves_one_artifact_per_ticker(models_dir):
     outcome = train_rule(quick_request("A1", "B2"))
     assert sorted(list_artifacts()) == ["A1", "B2"]
     a, b = load_artifact("A1"), load_artifact("B2")
-    assert a["genome"] == b["genome"]                 # one shared evolved rule
+    assert a["genome"] == b["genome"]                 # multi-asset mode evolves ONE shared rule
     assert a["meta"]["multi_asset_partners"] == ["B2"]
     assert len(outcome.artifacts) == 2
 
 
 def test_cli_and_web_paths_are_identical(models_dir):
-    """Same request + seed must give the same genome (single shared pipeline)."""
+    """Same request + same seed must give the same genome.
+
+    This is the test behind my claim that the CLI and the web admin are
+    interchangeable -- they call this one shared pipeline.
+    """
     g1 = train_rule(quick_request("SAME", seed=3)).genome
     g2 = train_rule(quick_request("SAME", seed=3)).genome
     assert g1 == g2
@@ -99,7 +107,7 @@ def test_job_manager_captures_failure(models_dir, monkeypatch):
     snap = wait_for(jm)
     assert snap["status"] == "failed"
     assert "simulated failure" in snap["error"]
-    assert not jm.is_busy()          # a failed job frees the slot
+    assert not jm.is_busy()          # crucial: a failed job must free the slot for the next one
 
 
 def test_job_history_keeps_finished_jobs(models_dir):

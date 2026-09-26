@@ -3,10 +3,12 @@
     data ingestion -> chronological split -> evolutionary search
                    -> out-of-sample evaluation -> saved rule artifact
 
-This is the single implementation used by BOTH entry points -- the command
-line (`scripts/train.py`) and the web admin area -- so the report can state
-that a rule trained from the browser is produced by exactly the same code,
-with the same honesty measures, as one trained from the terminal.
+There is deliberately only ONE implementation of this, used by both entry
+points -- the command line (`scripts/train.py`) and the web admin area. I
+wanted to be able to say in the report, honestly, that a rule trained from
+the browser comes out of exactly the same code, with exactly the same
+honesty measures, as one trained from the terminal (and there's a test that
+checks same request + same seed => same genome).
 """
 
 from __future__ import annotations
@@ -25,7 +27,7 @@ ProgressFn = Callable[[str], None]
 
 @dataclass
 class TrainRequest:
-    """Everything needed to run one training job (mirrors the CLI flags)."""
+    """Everything one training job needs. Field for field, this mirrors the CLI flags."""
 
     tickers: list[str]
     start: str = "2015-01-01"
@@ -36,7 +38,7 @@ class TrainRequest:
     seed: int = 7
     cost: float = 0.001
     folds: int = 4
-    synthetic: bool = False          # force GBM data (offline demo / tests)
+    synthetic: bool = False          # force GBM data -- for offline demos and the tests
 
     def validate(self) -> None:
         if not self.tickers:
@@ -61,13 +63,13 @@ class TrainRequest:
 
 @dataclass
 class TrainOutcome:
-    """Result of a training run, JSON-serialisable for the web UI."""
+    """What a training run produces, kept JSON-serialisable so the web UI can show it."""
 
     genome: dict
     rule_text: str
     best_fitness: float
-    per_ticker: list[dict] = field(default_factory=list)   # summary rows per ticker
-    history: list[dict] = field(default_factory=list)      # GA convergence
+    per_ticker: list[dict] = field(default_factory=list)   # one summary row per ticker
+    history: list[dict] = field(default_factory=list)      # GA convergence, for plotting
     artifacts: list[str] = field(default_factory=list)     # saved file paths
 
     def to_dict(self) -> dict:
@@ -75,11 +77,11 @@ class TrainOutcome:
 
 
 def train_rule(req: TrainRequest, progress: ProgressFn | None = None) -> TrainOutcome:
-    """Run the full pipeline for `req`, reporting progress lines via `progress`."""
+    """Run the whole pipeline for `req`, pushing human-readable progress lines to `progress`."""
     req.validate()
     log = progress or (lambda msg: None)
 
-    # ------------------------------------------------------------ data
+    # ------------------------------------------------------ 1. get the data
     series: dict[str, PriceSeries] = {}
     for t in req.tickers:
         if req.synthetic:
@@ -93,7 +95,7 @@ def train_rule(req: TrainRequest, progress: ProgressFn | None = None) -> TrainOu
         tr, _ = chronological_split(ps.prices, req.train_frac)
         train_map[t] = tr
 
-    # ------------------------------------------------------------ evolve
+    # ------------------------------------------- 2. evolve on the train part
     ga_cfg = GAConfig(population_size=req.population, generations=req.generations, seed=req.seed)
     fit_cfg = FitnessConfig(n_folds=req.folds, cost=req.cost)
     log(f"Evolving on {list(train_map)} (population {ga_cfg.population_size}, "
@@ -107,7 +109,7 @@ def train_rule(req: TrainRequest, progress: ProgressFn | None = None) -> TrainOu
     log(f"Best genome: {genome.to_dict()}")
     log(f"Rule: {genome.describe()}")
 
-    # ------------------------------------------------------------ evaluate & save
+    # --------------------------- 3. evaluate out-of-sample and save the rule
     outcome = TrainOutcome(
         genome=genome.to_dict(),
         rule_text=genome.describe(),

@@ -1,17 +1,18 @@
 #!/usr/bin/env python3
-"""The user-facing web advisor (Flask) plus the admin training area.
+"""The Flask app: the public advisor plus the admin training area.
 
-Two clearly separated surfaces share one process:
+I kept two clearly separated surfaces in one process:
 
-  * PUBLIC  -- the online advisor.  Loads a previously evolved rule, fetches
-    recent prices, runs the deterministic rule engine, asks the guardrailed
-    local LLM for a plain-language explanation (template fallback), and
-    renders it with a backtest equity curve.  No login needed.
+  * PUBLIC  -- the online advisor. It loads a previously evolved rule,
+    fetches recent prices, runs the deterministic rule engine, asks the
+    guardrailed local LLM for a plain-language explanation (with the
+    template fallback), and renders the lot with a backtest equity curve.
+    No login needed.
 
-  * ADMIN   -- the training system (see webapp/admin.py).  Behind a login;
-    lets an administrator evolve new rules from the browser, review every
-    saved rule's out-of-sample metrics, and delete rules.  Training uses the
-    exact same pipeline as scripts/train.py.
+  * ADMIN   -- the training system (implemented in webapp/admin.py). Behind
+    a login; lets the administrator evolve new rules from the browser, see
+    every saved rule's out-of-sample metrics, and delete rules. Training
+    goes through the exact same pipeline as scripts/train.py.
 
 Run with:  python webapp/app.py   (then open http://127.0.0.1:5000)
 Admin at:  http://127.0.0.1:5000/admin   (password: ADVISOR_ADMIN_PASSWORD env var)
@@ -41,11 +42,11 @@ from advisor.rule_engine import decide
 from webapp.admin import admin_bp, init_admin
 
 logging.basicConfig(level=logging.INFO)
-RECENT_DAYS = 600  # history fetched for the live signal + context chart
+RECENT_DAYS = 600  # how much history the live signal + context chart use
 
 
 def _equity_png(prices, genome) -> str:
-    """Backtest over the recent window and return the chart as base64 PNG."""
+    """Backtest the recent window and return the equity chart as a base64 PNG."""
     res = run_backtest(prices, genome)
     fig, ax = plt.subplots(figsize=(9, 4))
     ax.plot(res.equity.index, res.equity.values, label="Evolved strategy")
@@ -67,7 +68,7 @@ _FALSE = {"0", "false", "off", "no"}
 
 
 def _parse_holds(value: str | None) -> bool | None:
-    """?holds= for the JSON API: absent/unrecognised -> None (signal mode)."""
+    """Parse ?holds= for the JSON API. Absent or unrecognised -> None, i.e. signal mode."""
     if value is None:
         return None
     v = value.strip().lower()
@@ -79,10 +80,11 @@ def _parse_holds(value: str | None) -> bool | None:
 
 
 def create_app(config: dict | None = None) -> Flask:
-    """Application factory (lets the test-suite build isolated instances)."""
+    """Application factory -- mainly so the test suite can build isolated app instances."""
     app = Flask(__name__)
-    # Session signing key: from the environment in deployment, random per
-    # process otherwise (admin sessions then simply reset on restart).
+    # Session signing key: taken from the environment when deployed, random
+    # per process otherwise -- the only consequence of the random one is that
+    # admin sessions reset when the server restarts.
     app.config["SECRET_KEY"] = os.environ.get("ADVISOR_SECRET_KEY") or secrets.token_hex(32)
     app.config["SESSION_COOKIE_HTTPONLY"] = True
     app.config["SESSION_COOKIE_SAMESITE"] = "Lax"
@@ -100,16 +102,17 @@ def create_app(config: dict | None = None) -> Flask:
     def index():
         tickers = list_artifacts()
         selected = request.args.get("ticker") or (tickers[0] if tickers else None)
-        # An unticked checkbox is omitted from the query string entirely, so
-        # "absent" must mean OFF once the form has been submitted (i.e. when
-        # ?ticker= is present) and ON only on a fresh visit with no query.
+        # HTML gotcha that cost me a bug: an unticked checkbox is left out of
+        # the query string entirely. So "absent" has to mean OFF once the form
+        # has actually been submitted (i.e. ?ticker= is present), and can only
+        # mean the default ON on a fresh visit with no query at all.
         if "ticker" in request.args:
             use_llm = request.args.get("llm") == "on"
         else:
             use_llm = request.args.get("llm", "on") != "off"
-        # "I currently hold this asset" -- same unticked-checkbox rule; a
-        # fresh visit assumes the user holds nothing.  The web advisor always
-        # runs in position mode; the value is never stored anywhere.
+        # "I currently hold this asset" -- same unticked-checkbox rule as
+        # above; a fresh visit assumes the user holds nothing. The web page
+        # always runs in position mode, and the value is never stored.
         holds = request.args.get("holds") == "on"
 
         if not tickers:
@@ -139,10 +142,11 @@ def create_app(config: dict | None = None) -> Flask:
 
     @app.route("/api/recommendation/<ticker>")
     def api_recommendation(ticker: str):
-        """Machine-readable endpoint: the auditable decision + explanation.
+        """The machine-readable endpoint: the full auditable decision + explanation.
 
         ?holds=1|0 selects position mode (the user does / does not hold the
-        asset); omit it for signal mode (the rule's own transition today).
+        asset); leaving it out gives signal mode (the rule's own transition
+        today).
         """
         art = load_artifact(ticker)
         ps = fetch_prices(ticker)

@@ -1,50 +1,54 @@
 # Setup Instructions — Evolutionary Financial Advisor Bot (v1.1)
 
-## 1. Requirements
+## 1. What you need
 
-- Python 3.10 or newer (3.11 recommended)
-- Internet access (for downloading price data via Yahoo Finance)
-- Optional: [Ollama](https://ollama.com) for the local-LLM explanation layer.
-  Without it, the system automatically falls back to rule-based explanations —
-  nothing breaks.
+- Python 3.10 or newer (I developed on 3.11)
+- An internet connection, so the app can download price data from Yahoo
+  Finance
+- Optionally, [Ollama](https://ollama.com) if you want the local-LLM
+  explanation layer. It is genuinely optional: if Ollama isn't installed,
+  the system falls back to rule-based explanations and everything else
+  still works.
 
-## 2. Installation
+## 2. Installing
 
 ```bash
-# 1. Unzip the project and enter it
+# 1. Unzip the project and move into it
 cd evo-advisor
 
 # 2. Create and activate a virtual environment
 python3 -m venv .venv
-source .venv/bin/activate        # Windows: .venv\Scripts\activate
+source .venv/bin/activate        # on Windows: .venv\Scripts\activate
 
-# 3. Install dependencies
+# 3. Install the dependencies
 pip install -r requirements.txt
 ```
 
-## 3. (Optional) Set up the local LLM
+## 3. (Optional) Setting up the local LLM
 
 ```bash
 # Install Ollama from https://ollama.com, then:
 ollama pull llama3.2
-ollama serve                     # usually starts automatically after install
+ollama serve                     # this usually starts by itself after installing
 ```
 
-The advisor talks to Ollama at `http://localhost:11434`. To use a different
-model, change `OLLAMA_MODEL` at the top of `advisor/explain.py`.
+The advisor expects Ollama at `http://localhost:11434`. If you'd rather use
+a different model, change `OLLAMA_MODEL` at the top of
+`advisor/explain.py`.
 
-## 4. Verify the installation
+## 4. Checking the installation works
 
 ```bash
 python -m pytest tests/ -q
 ```
 
-All 51 tests should pass in about 15 seconds (no network needed).
+All 51 tests should pass in roughly 15 seconds, and none of them need the
+network.
 
-## 5. Set the admin password
+## 5. Setting the admin password
 
-The web app has an admin area for training rules. Set its password before
-starting the server:
+The web app has an admin area for training rules, and you should set its
+password before starting the server:
 
 ```bash
 export ADVISOR_ADMIN_PASSWORD="choose-a-strong-password"   # macOS / Linux
@@ -52,54 +56,63 @@ set ADVISOR_ADMIN_PASSWORD=choose-a-strong-password         # Windows cmd
 $env:ADVISOR_ADMIN_PASSWORD="choose-a-strong-password"      # Windows PowerShell
 ```
 
-If you skip this, the app runs in **development mode** with the default
-password `admin` and shows a warning banner on the login page.
+If you skip this step, the app still runs, but in **development mode**: the
+password defaults to `admin` and the login page displays a warning banner
+so this can't happen silently.
 
-Optional: `ADVISOR_SECRET_KEY` fixes the session-signing key so admin logins
-survive a server restart (otherwise a random key is generated each run).
+You can also set `ADVISOR_SECRET_KEY` to a fixed random string if you want
+admin logins to survive a server restart (otherwise a fresh signing key is
+generated every run, which logs everyone out).
 
-## 6. Run the web app
+## 6. Running the web app
 
 ```bash
 python webapp/app.py
 ```
 
-| Page | URL | Who |
+| Page | URL | Who it's for |
 |---|---|---|
-| Advisor | http://127.0.0.1:5000 | anyone — pick an asset, get BUY / HOLD / SELL with explanation |
-| Admin login | http://127.0.0.1:5000/admin/login | administrator |
-| Training system | http://127.0.0.1:5000/admin | administrator (after login) |
+| Advisor | http://127.0.0.1:5000 | anyone — choose an asset and get BUY / HOLD / SELL with an explanation |
+| Admin login | http://127.0.0.1:5000/admin/login | the administrator |
+| Training system | http://127.0.0.1:5000/admin | the administrator (once logged in) |
 | JSON API | http://127.0.0.1:5000/api/recommendation/AAPL | anyone |
 
-### Training a rule from the admin page
+### Training a rule through the admin page
 
 1. Log in at `/admin/login`.
-2. Under **Evolve a new rule**, enter one ticker (single-asset) or several
-   separated by spaces/commas (multi-asset — the rule must generalise across
-   all of them). Adjust population, generations, seed, transaction cost,
-   walk-forward folds and the date range if you wish.
-3. Click **Start training**. The job runs in the background; the page shows
-   live per-generation fitness, then the evolved rule and its out-of-sample
-   results. A 60 × 40 run on ten years of daily data takes a few minutes.
-4. When it finishes, the new ticker appears on the advisor page immediately.
+2. In **Evolve a new rule**, type one ticker for single-asset evolution, or
+   several tickers separated by spaces or commas for multi-asset evolution
+   (in that mode the rule has to generalise across all of them). You can
+   also change the population size, number of generations, random seed,
+   transaction cost, number of walk-forward folds and the date range.
+3. Press **Start training**. The job runs in the background and the page
+   shows the fitness for each generation as it goes, followed by the
+   evolved rule and its out-of-sample results. As a rough guide, a 60 × 40
+   run over ten years of daily data takes a few minutes on my machine.
+4. Once it finishes, the new ticker shows up on the public advisor page
+   straight away.
 
-Tick **Use synthetic data** to demo the whole flow without internet.
+If you tick **Use synthetic data**, the whole flow can be demonstrated
+without any internet connection.
 
-The **Saved rules** table lists every trained rule with its genome and its
-out-of-sample Sharpe, return and drawdown next to the buy-and-hold benchmark
-(green = beats the benchmark, red = doesn't). **Delete** removes a rule from
-the advisor (e.g. to retire the DEMO rule before a demo video).
+The **Saved rules** table shows every rule that has been trained, together
+with its genome and its out-of-sample Sharpe ratio, return and drawdown
+alongside the buy-and-hold benchmark (green means it beats the benchmark,
+red means it doesn't). The **Delete** button removes a rule from the
+advisor — I used this to retire the DEMO rule before recording my demo
+video.
 
-Only one training job runs at a time; the button is disabled while a job is
-in progress.
+Only one training job can run at a time, and the button is disabled while
+a job is in progress.
 
-## 7. Training from the command line (equivalent)
+## 7. Training from the command line (does the same thing)
 
-The admin page and the CLI call the same `advisor.pipeline.train_rule`, so
-either can be used — identical settings and seed give identical rules.
+The admin page and the CLI both call the same
+`advisor.pipeline.train_rule` function, so you can use whichever is more
+convenient — identical settings and seed give identical rules.
 
 ```bash
-# Single-asset evolution on Apple, 2015 onwards:
+# Single-asset evolution on Apple, from 2015 onwards:
 python scripts/train.py --ticker AAPL --start 2015-01-01
 
 # Multi-asset evolution:
@@ -109,53 +122,54 @@ python scripts/train.py --ticker AAPL MSFT SPY --start 2015-01-01
 python scripts/train.py --ticker DEMO --synthetic --generations 10 --population 30
 ```
 
-Flags: `--generations`, `--population`, `--seed`, `--cost` (per side, default
-0.001), `--folds` (walk-forward folds), `--train-frac` (default 0.7).
+Available flags: `--generations`, `--population`, `--seed`, `--cost` (per
+side, default 0.001), `--folds` (walk-forward folds) and `--train-frac`
+(default 0.7).
 
-## 8. Evaluate a trained rule (plots for the report)
+## 8. Evaluating a trained rule (this makes the plots for the report)
 
 ```bash
 python scripts/evaluate.py --ticker AAPL
 ```
 
-Prints the summary and rolling walk-forward tables and saves equity-curve,
-GA-convergence and drawdown plots into `reports/`.
+This prints the summary and rolling walk-forward tables, and saves the
+equity-curve, GA-convergence and drawdown plots into `reports/`.
 
 ## 9. Troubleshooting
 
-| Symptom | Cause / fix |
+| Symptom | Likely cause and fix |
 |---|---|
-| "Falling back to synthetic GBM data" | Yahoo Finance unreachable or bad ticker. Check internet / ticker symbol. Downloaded data is cached in `data_cache/` and reused automatically. |
-| "Need at least N days of prices, got 22" | Fixed in v1.1 (`advisor/data.py` now requests full history). If you still see it, delete `data_cache/<TICKER>.csv` and reload. |
-| Explanation labelled "rule-based fallback" | Ollama isn't running or the model isn't pulled. By design — advice is never blocked by the explanation layer. Run `ollama serve` and `ollama pull llama3.2`. |
-| Login page says "Development mode" | `ADVISOR_ADMIN_PASSWORD` is not set (step 5). Default password is `admin`. |
-| "Too many failed attempts" | Five wrong passwords lock login for 5 minutes (brute-force throttle). |
-| Admin session lost after restart | Set `ADVISOR_SECRET_KEY` to a fixed random string. |
-| "A training job is already running" | Wait for the current job; one runs at a time. |
-| Slow training | Reduce generations / population, or train one ticker at a time. |
+| "Falling back to synthetic GBM data" | Yahoo Finance couldn't be reached, or the ticker doesn't exist. Check your connection and the symbol. Downloaded data is cached in `data_cache/` and reused automatically. |
+| "Need at least N days of prices, got 22" | This was a bug I fixed in v1.1 (`advisor/data.py` now requests the full history). If it still appears, delete `data_cache/<TICKER>.csv` and reload. |
+| Explanation is labelled "rule-based fallback" | Ollama isn't running, or the model hasn't been pulled. This is deliberate — advice is never blocked just because the explanation layer is down. Run `ollama serve` and `ollama pull llama3.2`. |
+| Login page says "Development mode" | You haven't set `ADVISOR_ADMIN_PASSWORD` (see step 5). The default password is `admin`. |
+| "Too many failed attempts" | Five wrong passwords lock the login for 5 minutes — this is the brute-force throttle working as intended. |
+| Admin session lost after a restart | Set `ADVISOR_SECRET_KEY` to a fixed random string. |
+| "A training job is already running" | Wait for the current job to finish; only one runs at a time. |
+| Training is slow | Lower the generations or population, or train one ticker at a time. |
 
 ## 10. Project layout
 
 ```
 evo-advisor/
-├── advisor/            the library
+├── advisor/            the main library
 │   ├── data.py           price ingestion (yfinance + cache + GBM fallback)
 │   ├── genome.py         5-gene strategy representation
 │   ├── indicators.py     SMA, RSI
 │   ├── backtest.py       cost-aware backtester + Sharpe/drawdown metrics
 │   ├── fitness.py        walk-forward, regularised, multi-asset fitness
-│   ├── evolution.py      genetic algorithm
-│   ├── pipeline.py       end-to-end training pipeline (shared by CLI + web)
+│   ├── evolution.py      the genetic algorithm
+│   ├── pipeline.py       end-to-end training pipeline (shared by CLI and web)
 │   ├── jobs.py           background training jobs with live progress
 │   ├── evaluation.py     train/test split + walk-forward evaluation
 │   ├── persistence.py    rule artifacts -> models/<ticker>.json
 │   ├── rule_engine.py    deterministic BUY/HOLD/SELL + reasons
 │   └── explain.py        guardrailed Ollama explanation + fallback
-├── scripts/            train.py, evaluate.py
+├── scripts/            train.py and evaluate.py
 ├── webapp/             app.py (public advisor), admin.py (training system), templates/
 ├── tests/              pytest suite (51 tests)
 ├── models/             saved rule artifacts
-├── data_cache/         cached price CSVs (auto-created)
+├── data_cache/         cached price CSVs (created automatically)
 ├── reports/            evaluation plots (created by evaluate.py)
 ├── requirements.txt
 └── README.md           architecture and design rationale

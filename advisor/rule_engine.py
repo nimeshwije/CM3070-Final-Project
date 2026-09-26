@@ -1,26 +1,27 @@
 """The deterministic rule engine.
 
 Given an evolved genome and the latest prices, this module produces the
-advisor's decision -- BUY, SELL, or HOLD -- together with machine-readable
-reasons.  This output is fully auditable and reproducible: the same rule,
-the same prices and the same user position always yield the same decision.
-The language model in `explain.py` NEVER makes or alters this decision; it
-only rewords it.
+actual decision -- BUY, SELL or HOLD -- plus machine-readable reasons. The
+output is fully auditable: the same rule, prices and user position always
+give the same decision. The language model in `explain.py` NEVER makes or
+changes this decision; its only job is to reword it.
 
-Two ways of reading the rule
-----------------------------
-The evolved rule is a *state machine*: on every day it is either "in the
-market" (long) or "in cash" (flat).  That state is the rule's **stance**.
+Two ways of reading the rule (this took me a while to get right)
+----------------------------------------------------------------
+The evolved rule is really a *state machine*: on any given day it is either
+"in the market" (long) or "in cash" (flat). I call that state the rule's
+**stance**, and there are two sensible ways to turn it into advice:
 
-* **Signal mode** (`holds_position=None`) reports the *transition* implied
-  for the next trading day, exactly as the backtester trades it: BUY on the
-  day the rule enters, SELL on the day it exits, HOLD otherwise.  This is the
-  right view for auditing the rule, but transitions are rare (a few percent
-  of days), so a user would see HOLD almost every time.
+* **Signal mode** (`holds_position=None`) reports the *transition* the rule
+  makes today, exactly as the backtester trades it: BUY on the day the rule
+  enters, SELL on the day it exits, HOLD otherwise. This is the right view
+  for auditing the rule against the backtest -- but transitions only happen
+  on a few percent of days, so a user checking in would see HOLD almost
+  every single time, which I found genuinely confusing in early testing.
 
 * **Position mode** (`holds_position=True/False`) answers the question a
-  real user asks -- "given what *I* hold, what should I do?" -- by comparing
-  the rule's stance with the user's position:
+  real user actually asks -- "given what *I* hold, what should I do?" -- by
+  comparing the rule's stance with the user's own position:
 
       rule stance   user holds   ->  action
       in_market     yes          ->  HOLD   (keep the position)
@@ -28,12 +29,13 @@ market" (long) or "in cash" (flat).  That state is the rule's **stance**.
       in_cash       yes          ->  SELL   (the rule would be in cash)
       in_cash       no           ->  HOLD   (stay in cash, wait)
 
-  Either way `signal_changed` flags the days on which the rule itself
-  flipped, so the "fresh signal" information of signal mode is never lost.
+  In both modes `signal_changed` flags the days the rule itself flipped, so
+  the "fresh signal" information from signal mode is never lost.
 
-Nothing about the user's position is stored -- it is a request parameter
-only, which keeps the system inside the project's ethics scope (no personal
-or financial data retained).
+One ethics point worth stating in the code: the user's position is a request
+parameter and nothing more. It is never stored anywhere, which keeps the
+system inside the project's ethics scope (no personal or financial data
+retained).
 """
 
 from __future__ import annotations
@@ -52,7 +54,7 @@ IN_CASH = "in_cash"
 
 @dataclass
 class Decision:
-    """A structured, machine-readable recommendation."""
+    """The recommendation as a structured object, so everything is inspectable."""
 
     ticker: str
     action: str                  # "BUY" | "SELL" | "HOLD"
@@ -73,7 +75,7 @@ class Decision:
 
 
 def position_action(stance: str, holds_position: bool) -> str:
-    """The position-aware decision table (pure function, easy to test)."""
+    """The position-aware decision table. Pure function on purpose -- trivially testable."""
     if stance == IN_MARKET:
         return "HOLD" if holds_position else "BUY"
     return "SELL" if holds_position else "HOLD"
@@ -85,10 +87,11 @@ def decide(
     genome: Genome,
     holds_position: bool | None = None,
 ) -> Decision:
-    """Apply the evolved rule to the latest data and emit a Decision.
+    """Apply the evolved rule to the latest data and build a Decision.
 
-    `holds_position=None` selects signal mode (transition semantics);
-    a bool selects position mode.  See the module docstring.
+    Passing `holds_position=None` gives signal mode (transition semantics);
+    passing a bool gives position mode. The module docstring explains the
+    difference and why both exist.
     """
     prices = prices.dropna()
     if len(prices) < genome.long_window + 5:
@@ -110,7 +113,7 @@ def decide(
     s_long = sma(prices, genome.long_window).iloc[-1]
     r = rsi(prices, genome.rsi_period).iloc[-1]
 
-    # --- indicator reasons (identical in both modes) -----------------------
+    # --- reasons from the indicators (these are the same in both modes) ----
     trend_up = s_short > s_long
     reasons: list[str] = []
     reasons.append(
@@ -128,7 +131,7 @@ def decide(
         )
     reasons.append(f"{genome.rsi_period}-day RSI is {r:.0f}, {rsi_state}")
 
-    # --- what the rule itself is doing ------------------------------------
+    # --- then a reason describing what the rule itself is doing today ------
     if signal == "enter":
         reasons.append("the rule's entry conditions have just been met: it moves into the market today")
     elif signal == "exit":
@@ -138,7 +141,7 @@ def decide(
     else:
         reasons.append("the rule's entry conditions are not met: it stays in cash")
 
-    # --- turn stance into an action -----------------------------------------
+    # --- finally, turn the rule's stance into an action for this user -------
     if holds_position is None:
         mode = "signal"
         action = {"enter": "BUY", "exit": "SELL", "none": "HOLD"}[signal]

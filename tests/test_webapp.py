@@ -1,4 +1,8 @@
-"""Flask test-client tests: public advisor, admin auth, web training, delete."""
+"""Flask test-client tests: the public advisor, admin auth, web training and delete.
+
+These test the app end to end through HTTP (well, the test client), which is
+as close as the automated suite gets to what a user actually experiences.
+"""
 import re
 import time
 
@@ -60,15 +64,17 @@ def test_index_without_models_explains_how_to_train(client):
 
 def test_index_serves_recommendation_for_synthetic_model(client, models_dir):
     train_rule(TrainRequest(tickers=["SYNX"], population=8, generations=2, folds=2, synthetic=True))
-    # No network here: fetch_prices falls back to synthetic data for SYNX.
+    # No network needed: fetch_prices falls back to synthetic data for SYNX.
     html = client.get("/?ticker=SYNX&llm=off").get_data(as_text=True)
     assert re.search(r'class="badge (BUY|SELL|HOLD)"', html)
     assert "rule-based fallback" in html
 
 
 def test_llm_checkbox_can_be_unticked(client, models_dir):
-    """Regression: an unticked checkbox is omitted from the form, so absence
-    of ?llm= on a submitted form must mean OFF, not fall back to ON."""
+    """Regression test for a real bug: an unticked checkbox is simply omitted
+    from the submitted form, so the absence of ?llm= on a submitted form has
+    to mean OFF -- my first version fell back to ON and the box could never
+    be unticked."""
     train_rule(TrainRequest(tickers=["SYNZ"], population=8, generations=2, folds=2, synthetic=True))
 
     def checkbox_is_checked(html: str) -> bool:
@@ -84,7 +90,7 @@ def test_api_recommendation_json(client, models_dir):
     train_rule(TrainRequest(tickers=["SYNY"], population=8, generations=2, folds=2, synthetic=True))
     data = client.get("/api/recommendation/SYNY?llm=off").get_json()
     assert data["decision"]["action"] in {"BUY", "SELL", "HOLD"}
-    assert data["decision"]["mode"] == "signal"          # no ?holds= -> signal mode
+    assert data["decision"]["mode"] == "signal"          # leaving out ?holds= means signal mode
     assert data["explanation"]["source"] == "template"
 
 
@@ -97,13 +103,14 @@ def test_api_holds_parameter_selects_position_mode(client, models_dir):
     assert yes["stance"] == no["stance"]
     assert (yes["action"], no["action"]) == (
         ("HOLD", "BUY") if yes["stance"] == "in_market" else ("SELL", "HOLD"))
-    # unrecognised value -> signal mode rather than a 500
+    # a junk value should degrade to signal mode, not blow up with a 500
     assert client.get("/api/recommendation/SYNP?llm=off&holds=maybe").get_json()["decision"]["mode"] == "signal"
 
 
 def test_holds_checkbox_drives_position_aware_advice(client, models_dir):
-    """The web advisor always runs in position mode; the checkbox is the
-    user's position and, like the LLM box, absent-on-submit means OFF."""
+    """The web page always runs in position mode: the checkbox states the
+    user's position, and (same HTML quirk as the LLM box) absent-on-submit
+    means OFF."""
     train_rule(TrainRequest(tickers=["SYNH"], population=8, generations=2, folds=2, synthetic=True))
     stance = client.get("/api/recommendation/SYNH?llm=off").get_json()["decision"]["stance"]
 
@@ -113,7 +120,7 @@ def test_holds_checkbox_drives_position_aware_advice(client, models_dir):
     def holds_checked(html):
         return "checked" in html.split('name="holds"')[1].split(">")[0]
 
-    fresh = client.get("/").get_data(as_text=True)                     # first visit: holds nothing
+    fresh = client.get("/").get_data(as_text=True)                     # a first visit assumes you hold nothing
     assert not holds_checked(fresh) and "You: hold nothing" in fresh
     without = client.get("/?ticker=SYNH&llm=off").get_data(as_text=True)
     with_ = client.get("/?ticker=SYNH&llm=off&holds=on").get_data(as_text=True)
@@ -172,7 +179,7 @@ def test_lockout_after_repeated_failures(client, monkeypatch):
     for _ in range(3):
         login(client, "bad")
     assert login(client, "bad").status_code == 429
-    assert login(client, PASSWORD).status_code == 429  # even the right password waits
+    assert login(client, PASSWORD).status_code == 429  # even the correct password has to wait out the lockout
 
 
 def test_default_password_used_when_env_unset(models_dir, monkeypatch):
@@ -208,7 +215,7 @@ def test_train_from_web_creates_model(client, models_dir):
 
     html = client.get("/admin/").get_data(as_text=True)
     assert "WEBX" in html and "multi-asset with WEBY" in html
-    # ...and the public advisor now offers them
+    # ...and the public advisor page should offer them immediately
     assert "WEBX" in client.get("/?llm=off").get_data(as_text=True)
 
 

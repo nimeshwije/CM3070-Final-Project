@@ -25,10 +25,10 @@ def test_decision_structure():
     assert d.signal_changed == (d.signal != "none")
     assert len(d.reasons) >= 2
     assert d.rule == GENOME.to_dict()
-    json.dumps(d.to_dict())  # must be JSON-serialisable
+    json.dumps(d.to_dict())  # the API returns this, so it has to be JSON-serialisable
 
 
-# ------------------------------------------------- position-aware advice
+# ---------------------------------------- the position-aware advice mode
 def test_position_action_table():
     assert position_action("in_market", True) == "HOLD"
     assert position_action("in_market", False) == "BUY"
@@ -44,15 +44,15 @@ def test_position_mode_is_stance_vs_position(seed):
         d = decide("SYN", prices, GENOME, holds_position=holds)
         assert d.mode == "position" and d.holds_position is holds
         assert d.action == position_action(d.stance, holds)
-        # Everything the rule itself computed is identical across modes:
+        # Everything the rule itself computed must be identical in both modes:
         assert (d.stance, d.signal, d.signal_changed, d.indicators) == \
                (sig.stance, sig.signal, sig.signal_changed, sig.indicators)
-        assert d.reasons[:-1] == sig.reasons          # plus one position reason
+        assert d.reasons[:-1] == sig.reasons          # position mode only appends one extra reason
         assert ("you currently hold" if holds else "you do not currently hold") in d.reasons[-1]
 
 
 def test_signal_mode_matches_backtester_transition():
-    """Signal mode must report exactly the transition the backtester trades."""
+    """Signal mode has to report exactly the transition the backtester would trade."""
     prices = synthetic_gbm(400, seed=22)
     pos = compute_positions(prices, GENOME)
     d = decide("SYN", prices, GENOME)
@@ -61,7 +61,7 @@ def test_signal_mode_matches_backtester_transition():
 
 
 def test_signal_changed_flag_on_a_transition_day():
-    """Truncate the series at a day the rule flips: both modes must flag it."""
+    """Cut the series off at a day the rule flips: both modes must flag the fresh signal."""
     prices = synthetic_gbm(600, seed=30)
     pos = compute_positions(prices, GENOME)
     flips = [i for i in range(GENOME.long_window + 10, len(pos)) if pos.iloc[i] != pos.iloc[i - 1]]
@@ -72,7 +72,8 @@ def test_signal_changed_flag_on_a_transition_day():
     assert sig.signal_changed and sig.action in {"BUY", "SELL"}
     entered = pos.iloc[i] > pos.iloc[i - 1]
     assert sig.signal == ("enter" if entered else "exit")
-    # Position mode on the same day: the flag survives, the action depends on the user.
+    # Same day in position mode: the flag must survive, while the action
+    # depends on what the user holds.
     holder = decide("SYN", upto, GENOME, holds_position=True)
     nobody = decide("SYN", upto, GENOME, holds_position=False)
     assert holder.signal_changed and nobody.signal_changed

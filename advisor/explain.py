@@ -1,16 +1,18 @@
-"""The guardrailed explanation layer.
+"""The explanation layer, kept behind guardrails.
 
-A local language model (via Ollama) rewrites the rule engine's deterministic
-Decision into friendly prose for a non-technical user.  Safety design, as set
-out in the report's design chapter:
+A local language model (through Ollama) rewrites the rule engine's finished
+Decision into friendly prose for a non-technical user. The safety design I
+committed to in the report's design chapter is enforced here in code:
 
-  * The LLM NEVER makes or alters the decision -- the prompt hands it the
-    finished decision and forbids changing it.
-  * The LLM's output is POST-CHECKED: if it contradicts the decision (e.g.
-    recommends a different action), mentions none of the supplied facts, or
-    fails to arrive at all, the system falls back to a deterministic
-    template message -- advice is never blocked by the explanation layer.
-  * Running locally keeps the system free and keeps user data on-device.
+  * The LLM NEVER makes or alters the decision. The prompt hands it a
+    decision that has already been made and explicitly forbids changing it.
+  * I don't just trust the prompt, though -- the LLM's output is POST-CHECKED
+    before display. If it contradicts the decision (e.g. recommends a
+    different action), is degenerate, or simply never arrives, the system
+    falls back to a deterministic template message. Advice is therefore
+    never blocked by the explanation layer being down or misbehaving.
+  * Running the model locally keeps the project free to run and keeps user
+    data on the user's own machine.
 """
 
 from __future__ import annotations
@@ -24,7 +26,7 @@ from .rule_engine import Decision
 logger = logging.getLogger(__name__)
 
 OLLAMA_URL = "http://localhost:11434/api/generate"
-OLLAMA_MODEL = "llama3.2"          # any small local chat model works
+OLLAMA_MODEL = "llama3.2"          # any small local chat model would do here
 OLLAMA_TIMEOUT_S = 30
 
 DISCLAIMER = (
@@ -59,7 +61,7 @@ _POSITION_NOTES = {
 
 
 def _action_phrase(decision: Decision) -> str:
-    """Headline phrase for the template, aware of mode and user position."""
+    """The headline phrase for the template, worded per mode and user position."""
     invested = decision.stance == "in_market"
     if decision.mode == "position":
         holds = bool(decision.holds_position)
@@ -79,7 +81,7 @@ def _action_phrase(decision: Decision) -> str:
 
 
 def _template_explanation(decision: Decision) -> str:
-    """Deterministic fallback prose, built only from the Decision itself."""
+    """The deterministic fallback prose -- built purely from the Decision, no LLM involved."""
     reasons = "; ".join(decision.reasons)
     fresh = ""
     if decision.signal_changed:
@@ -93,7 +95,7 @@ def _template_explanation(decision: Decision) -> str:
 
 
 def _call_ollama(prompt: str, model: str, url: str) -> str | None:
-    """Minimal Ollama REST call; returns None on any failure."""
+    """A minimal Ollama REST call. Any failure at all just returns None."""
     body = json.dumps({"model": model, "prompt": prompt, "stream": False}).encode()
     req = urllib.request.Request(url, data=body, headers={"Content-Type": "application/json"})
     try:
@@ -106,10 +108,10 @@ def _call_ollama(prompt: str, model: str, url: str) -> str | None:
 
 
 def _passes_guardrails(text: str, decision: Decision) -> bool:
-    """Post-check the LLM output before showing it to the user.
+    """Post-check the LLM's output before it is allowed anywhere near the user.
 
-    Reject if the stated action is missing, if a *different* action is
-    recommended, or if the text is degenerate (too short/long).
+    Rejects the text if it never states the decided action, if it recommends
+    a *different* action, or if it is degenerate (too short or too long).
     """
     if not text or len(text) < 30 or len(text) > 1200:
         return False
@@ -118,7 +120,8 @@ def _passes_guardrails(text: str, decision: Decision) -> bool:
         return False
     other_actions = {"BUY", "SELL", "HOLD"} - {decision.action}
     for other in other_actions:
-        # A different action word used as a recommendation is disqualifying.
+        # Merely mentioning another action word is fine (e.g. "rather than
+        # selling"), but recommending one is disqualifying.
         for phrase in (f"RECOMMEND {other}", f"SHOULD {other}", f"{other} NOW"):
             if phrase in upper:
                 return False
@@ -133,8 +136,10 @@ def explain(
 ) -> dict:
     """Produce the user-facing explanation for a Decision.
 
-    Returns {"text": ..., "source": "llm" | "template"}.  The template path
-    is taken whenever the LLM is disabled, unreachable, or fails guardrails.
+    Returns {"text": ..., "source": "llm" | "template"}. The template path
+    is taken whenever the LLM is disabled, unreachable, or fails the
+    guardrail check -- and the source label is shown in the UI, so the user
+    always knows which path produced what they are reading.
     """
     if use_llm:
         prompt = (
